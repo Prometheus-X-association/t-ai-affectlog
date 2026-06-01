@@ -11,6 +11,7 @@ from fastapi.responses import PlainTextResponse
 
 from affectlog.config import get_settings
 from affectlog.core.ids import new_run_id
+from affectlog.core.paths import resolve_safe_path, validate_run_id
 from affectlog.schemas.api import AuditMetricsResponse, AuditRunRequest, AuditRunResponse
 
 router = APIRouter(prefix="/v1/audits", tags=["Audits"])
@@ -24,10 +25,20 @@ def _run_audit_bg(run_id: str, req: AuditRunRequest) -> None:
         from affectlog.recipes.loader import load_recipe
         from affectlog.recipes.runner import run_audit
 
-        recipe = load_recipe(req.recipe)
-        out_dir = Path(req.output_dir or (settings.runs_dir / run_id))
+        try:
+            safe_recipe = resolve_safe_path(Path.cwd(), req.recipe)
+            safe_input = resolve_safe_path(Path.cwd(), req.input_path)
+        except ValueError as exc:
+            _run_status[run_id] = {"run_id": run_id, "status": "failed", "error": str(exc)}
+            return
+
+        recipe = load_recipe(safe_recipe)
+        if req.output_dir:
+            out_dir = resolve_safe_path(Path(settings.runs_dir).resolve(), req.output_dir)
+        else:
+            out_dir = Path(settings.runs_dir) / run_id
         ctx = run_audit(
-            req.input_path,
+            safe_input,
             recipe,
             out_dir,
             hash_secret=settings.hash_secret,
@@ -73,8 +84,15 @@ async def get_audit(run_id: str) -> AuditRunResponse:
 
 @router.get("/{run_id}/artifacts", summary="List run artifacts")
 async def get_artifacts(run_id: str) -> dict[str, Any]:
+    try:
+        validate_run_id(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    run_dir = Path(settings.runs_dir / run_id)
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     if not run_dir.exists():
         raise HTTPException(status_code=404, detail=f"Run directory '{run_id}' not found.")
     return {"run_id": run_id, "artifacts": [f.name for f in run_dir.iterdir() if f.is_file()]}
@@ -82,8 +100,16 @@ async def get_artifacts(run_id: str) -> dict[str, Any]:
 
 @router.get("/{run_id}/metrics", response_model=AuditMetricsResponse, summary="Get run metrics")
 async def get_metrics(run_id: str) -> AuditMetricsResponse:
+    try:
+        validate_run_id(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    metrics_path = Path(settings.runs_dir) / run_id / "metrics.json"
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    metrics_path = run_dir / "metrics.json"
     if not metrics_path.exists():
         raise HTTPException(status_code=404, detail="metrics.json not found for this run.")
     return AuditMetricsResponse(run_id=run_id, metrics=json.loads(metrics_path.read_text()))
@@ -91,8 +117,16 @@ async def get_metrics(run_id: str) -> AuditMetricsResponse:
 
 @router.get("/{run_id}/sop", response_class=PlainTextResponse, summary="Get SOP markdown")
 async def get_sop(run_id: str) -> str:
+    try:
+        validate_run_id(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    sop_path = Path(settings.runs_dir) / run_id / "SOP.md"
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    sop_path = run_dir / "SOP.md"
     if not sop_path.exists():
         raise HTTPException(status_code=404, detail="SOP.md not found for this run.")
     return sop_path.read_text()
@@ -100,8 +134,16 @@ async def get_sop(run_id: str) -> str:
 
 @router.get("/{run_id}/compliance-graph", summary="Get compliance JSON-LD graph")
 async def get_compliance_graph(run_id: str) -> dict[str, Any]:
+    try:
+        validate_run_id(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    jld_path = Path(settings.runs_dir) / run_id / "compliance_graph.jsonld"
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    jld_path = run_dir / "compliance_graph.jsonld"
     if not jld_path.exists():
         raise HTTPException(status_code=404, detail="compliance_graph.jsonld not found.")
     return json.loads(jld_path.read_text())  # type: ignore[no-any-return]
@@ -109,8 +151,16 @@ async def get_compliance_graph(run_id: str) -> dict[str, Any]:
 
 @router.get("/{run_id}/dashboard", summary="Get dashboard payload for this run")
 async def get_dashboard(run_id: str) -> dict[str, Any]:
+    try:
+        validate_run_id(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    dash_path = Path(settings.runs_dir) / run_id / "dashboard_payload.json"
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    dash_path = run_dir / "dashboard_payload.json"
     if not dash_path.exists():
         raise HTTPException(
             status_code=404, detail="dashboard_payload.json not found for this run."

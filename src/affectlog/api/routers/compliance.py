@@ -9,6 +9,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 
 from affectlog.config import get_settings
+from affectlog.core.paths import resolve_safe_path, validate_run_id
 from affectlog.schemas.api import ComplianceJSONLDRequest, DataCardRequest
 
 router = APIRouter(prefix="/v1/compliance", tags=["Compliance"])
@@ -28,8 +29,15 @@ async def build_jsonld(req: ComplianceJSONLDRequest) -> dict[str, Any]:
 
 @router.post("/data-card", summary="Build Data Card for a run")
 async def build_data_card_endpoint(req: DataCardRequest) -> dict[str, Any]:
+    try:
+        validate_run_id(req.run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     settings = get_settings()
-    run_dir = Path(settings.runs_dir) / req.run_id
+    try:
+        run_dir = resolve_safe_path(Path(settings.runs_dir), req.run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     dc_path = run_dir / "data_card.json"
     if dc_path.exists():
         return json.loads(dc_path.read_text())  # type: ignore[no-any-return]

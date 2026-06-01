@@ -16,11 +16,21 @@ class TorchAdapter(BaseModelAdapter):
         self._model = model
 
     @classmethod
-    def from_file(cls, path: Path | str) -> TorchAdapter:
+    def from_file(
+        cls,
+        path: Path | str,
+        *,
+        trusted_dir: Path | None = None,
+    ) -> TorchAdapter:
+        resolved = Path(path).resolve()
+        if trusted_dir is not None and not resolved.is_relative_to(trusted_dir.resolve()):
+            raise ModelAdapterError(
+                f"Model path '{resolved}' is outside the trusted directory '{trusted_dir}'"
+            )
         try:
             import torch
 
-            model = torch.jit.load(str(path))
+            model = torch.jit.load(str(resolved))
             model.eval()
             return cls(model)
         except ImportError as exc:

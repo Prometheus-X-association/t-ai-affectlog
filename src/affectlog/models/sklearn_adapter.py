@@ -22,19 +22,24 @@ class SklearnAdapter(BaseModelAdapter):
             self._feature_names = list(self._feature_names.tolist())  # type: ignore[union-attr]
 
     @classmethod
-    def from_file(cls, path: Path | str, feature_names: list[str] | None = None) -> SklearnAdapter:
+    def from_file(
+        cls,
+        path: Path | str,
+        feature_names: list[str] | None = None,
+        *,
+        trusted_dir: Path | None = None,
+    ) -> SklearnAdapter:
+        resolved = Path(path).resolve()
+        if trusted_dir is not None and not resolved.is_relative_to(trusted_dir.resolve()):
+            raise ModelAdapterError(
+                f"Model path '{resolved}' is outside the trusted directory '{trusted_dir}'"
+            )
         try:
             import joblib
 
-            model = joblib.load(path)
-        except Exception:
-            try:
-                import pickle
-
-                with Path(path).open("rb") as f:
-                    model = pickle.load(f)
-            except Exception as exc:
-                raise ModelAdapterError(f"Cannot load sklearn model from {path}: {exc}") from exc
+            model = joblib.load(resolved)
+        except Exception as exc:
+            raise ModelAdapterError(f"Cannot load sklearn model from {resolved}: {exc}") from exc
         return cls(model, feature_names)
 
     def predict(self, X: np.ndarray | list[Any]) -> list[Any]:

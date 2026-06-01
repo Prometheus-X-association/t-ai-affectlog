@@ -17,9 +17,11 @@ from affectlog.recipes.base import (
 
 
 def load_recipe(path: Path | str) -> Recipe:
-    path = Path(path)
+    path = Path(path).resolve()
     if not path.exists():
         raise RecipeNotFoundError(f"Recipe file not found: {path}")
+    if path.suffix not in {".yaml", ".yml"}:
+        raise RecipeConfigError(f"Recipe must be a YAML file (.yaml/.yml): {path}")
     try:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     except yaml.YAMLError as exc:

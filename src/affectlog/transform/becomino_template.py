@@ -56,7 +56,7 @@ def infer_becomino_template(
     )
 
     if output_path:
-        out = Path(output_path)
+        out = Path(output_path).resolve()
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(template, indent=2))
         logger.info("Becomino template written to %s", out)

@@ -165,8 +165,8 @@ def convert_maskott_csv_to_xapi(
 
     Returns summary stats dict.
     """
-    input_path = Path(input_path)
-    output_path = Path(output_path)
+    input_path = Path(input_path).resolve()
+    output_path = Path(output_path).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     template = infer_becomino_template(template_path)

@@ -16,7 +16,10 @@ def infer_json_schema(path: Path | str) -> dict[str, Any]:
     Load a JSON or JSONL sample and infer key structure.
     Returns a dict with field paths at top-level and a 'sample' key.
     """
-    path = Path(path)
+    path = Path(path).resolve()
+    if not path.is_file():
+        logger.warning("Not a regular file: %s", path)
+        return {}
     raw = path.read_text(encoding="utf-8").strip()
 
     records: list[dict[str, Any]] = []

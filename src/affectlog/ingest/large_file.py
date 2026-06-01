@@ -38,9 +38,11 @@ def scan_csv_lazy(
     infer_schema_length: int = 10_000,
 ) -> pl.LazyFrame:
     """Return a Polars LazyFrame for a CSV (no data loaded yet)."""
-    path = Path(path)
+    path = Path(path).resolve()
     if not path.exists():
         raise IngestError(f"File not found: {path}")
+    if not path.is_file():
+        raise IngestError(f"Not a regular file: {path}")
     try:
         lf = pl.scan_csv(
             path,
