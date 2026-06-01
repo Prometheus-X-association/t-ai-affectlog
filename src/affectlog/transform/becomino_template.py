@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.ingest.schema_infer import infer_json_schema
 
@@ -36,8 +36,8 @@ DEFAULT_TEMPLATE: dict[str, Any] = {
 
 
 def infer_becomino_template(
-    sample_path: Optional[Path | str] = None,
-    output_path: Optional[Path | str] = None,
+    sample_path: Path | str | None = None,
+    output_path: Path | str | None = None,
 ) -> dict[str, Any]:
     """
     Infer a Becomino-compatible template from a sample JSON file.
@@ -49,7 +49,11 @@ def infer_becomino_template(
     Returns:
         Template dict describing mapping paths.
     """
-    template = _infer(sample_path) if sample_path and Path(sample_path).exists() else DEFAULT_TEMPLATE.copy()
+    template = (
+        _infer(sample_path)
+        if sample_path and Path(sample_path).exists()
+        else DEFAULT_TEMPLATE.copy()
+    )
 
     if output_path:
         out = Path(output_path)

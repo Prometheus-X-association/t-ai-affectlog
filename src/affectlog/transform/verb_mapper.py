@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 import yaml
 
@@ -46,7 +45,9 @@ class VerbMapper:
         "attempted": {"id": "http://adlnet.gov/expapi/verbs/attempted", "display": "attempted"},
     }
 
-    def __init__(self, mapping: dict[str, object] | None = None, yaml_path: Path | None = None) -> None:
+    def __init__(
+        self, mapping: dict[str, object] | None = None, yaml_path: Path | None = None
+    ) -> None:
         self._map: dict[str, dict[str, str]] = dict(DEFAULT_VERB_MAP)
         if yaml_path and yaml_path.exists():
             extra = yaml.safe_load(yaml_path.read_text())
@@ -66,7 +67,7 @@ class VerbMapper:
                 self._map[k.upper()] = resolved
             # ignore non-string, non-dict values
 
-    def get(self, view_context: Optional[str]) -> dict[str, str]:
+    def get(self, view_context: str | None) -> dict[str, str]:
         if not view_context:
             return self._map["_default"]
         key = str(view_context).upper()

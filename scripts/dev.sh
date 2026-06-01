@@ -23,7 +23,7 @@ fi
 # ── Python install check ──────────────────────────────────────────────
 if ! python3 -c "import affectlog" &>/dev/null; then
   echo -e "${YELLOW}⚠  affectlog not installed — running: pip install -e \".[dev]\"${RESET}"
-  cd "$ROOT" && pip install -e ".[dev]" --quiet
+  cd "$ROOT" && pip3 install -e ".[dev]" --quiet
 fi
 
 # ── Node install check ────────────────────────────────────────────────

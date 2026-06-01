@@ -1,6 +1,5 @@
 """Tests: Pseudonymizer."""
 
-import pytest
 from affectlog.privacy.pseudonymizer import Pseudonymizer
 
 

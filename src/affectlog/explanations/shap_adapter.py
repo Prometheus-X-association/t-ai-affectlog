@@ -9,7 +9,8 @@ import numpy as np
 
 def shap_explain(predict_fn: Any, X: np.ndarray, max_samples: int = 100) -> dict[str, Any]:
     try:
-        import shap  # type: ignore[import]
+        import shap
+
         X_sample = X[:max_samples]
         explainer = shap.Explainer(predict_fn, X_sample)
         values = explainer(X_sample)

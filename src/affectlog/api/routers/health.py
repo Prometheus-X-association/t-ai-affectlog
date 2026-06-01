@@ -23,4 +23,6 @@ async def readyz() -> HealthResponse:
 
 @router.get("/metrics", summary="Prometheus-compatible metrics (stub)")
 async def metrics() -> dict:  # type: ignore[type-arg]
-    return {"info": "Prometheus metrics endpoint — integrate with prometheus-fastapi-instrumentator for full metrics."}
+    return {
+        "info": "Prometheus metrics endpoint — integrate with prometheus-fastapi-instrumentator for full metrics."
+    }

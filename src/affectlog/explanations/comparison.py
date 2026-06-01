@@ -18,8 +18,10 @@ def compare_models(
     for adapter in models:
         preds = adapter.predict(X)
         acc = float(np.mean(np.array(preds) == y))
-        results.append({
-            **adapter.metadata(),
-            "accuracy": round(acc, 4),
-        })
+        results.append(
+            {
+                **adapter.metadata(),
+                "accuracy": round(acc, 4),
+            }
+        )
     return sorted(results, key=lambda r: r.get("accuracy", 0), reverse=True)

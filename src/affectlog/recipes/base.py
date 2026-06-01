@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
 class PrivacyConfig:
     pseudonymize: bool = True
     method: str = "hmac_sha256"
-    hash_fields: list[str] = field(default_factory=lambda: ["_id", "EntityId", "EntityUaiCode", "ActivitySessionId"])
+    hash_fields: list[str] = field(
+        default_factory=lambda: ["_id", "EntityId", "EntityUaiCode", "ActivitySessionId"]
+    )
     suppress_fields: list[str] = field(default_factory=list)
     redact_fields: list[str] = field(default_factory=list)
     allow_raw_identifiers: bool = False

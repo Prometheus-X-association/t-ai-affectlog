@@ -24,7 +24,7 @@ def compute_descriptive_stats(path: Path | str, limit: int = 0) -> dict[str, Any
     null_durations = 0
     total_duration = 0.0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -38,9 +38,8 @@ def compute_descriptive_stats(path: Path | str, limit: int = 0) -> dict[str, Any
             if limit and total > limit:
                 break
 
-            actor = (
-                evt.get("actor", {}).get("account", {}).get("name")
-                or evt.get("actor", {}).get("mbox", "unknown")
+            actor = evt.get("actor", {}).get("account", {}).get("name") or evt.get("actor", {}).get(
+                "mbox", "unknown"
             )
             actor_counter[str(actor)] += 1
 

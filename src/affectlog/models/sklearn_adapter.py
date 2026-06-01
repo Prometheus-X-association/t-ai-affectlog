@@ -19,17 +19,19 @@ class SklearnAdapter(BaseModelAdapter):
         self._model = model
         self._feature_names = feature_names or getattr(model, "feature_names_in_", [])
         if hasattr(self._feature_names, "tolist"):
-            self._feature_names = list(self._feature_names.tolist())
+            self._feature_names = list(self._feature_names.tolist())  # type: ignore[union-attr]
 
     @classmethod
-    def from_file(cls, path: Path | str, feature_names: list[str] | None = None) -> "SklearnAdapter":
+    def from_file(cls, path: Path | str, feature_names: list[str] | None = None) -> SklearnAdapter:
         try:
             import joblib
+
             model = joblib.load(path)
         except Exception:
             try:
                 import pickle
-                with open(path, "rb") as f:
+
+                with Path(path).open("rb") as f:
                     model = pickle.load(f)
             except Exception as exc:
                 raise ModelAdapterError(f"Cannot load sklearn model from {path}: {exc}") from exc
@@ -43,7 +45,7 @@ class SklearnAdapter(BaseModelAdapter):
         if not hasattr(self._model, "predict_proba"):
             raise NotImplementedError
         arr = np.array(X)
-        return self._model.predict_proba(arr).tolist()
+        return self._model.predict_proba(arr).tolist()  # type: ignore[no-any-return]
 
     def metadata(self) -> dict[str, Any]:
         m = self._model
@@ -56,11 +58,12 @@ class SklearnAdapter(BaseModelAdapter):
         }
 
     @property
-    def feature_names(self) -> list[str]:  # type: ignore[override]
+    def feature_names(self) -> list[str]:
         return list(self._feature_names)
 
     def is_classifier(self) -> bool:
         from sklearn.base import is_classifier as skl_is_clf
+
         try:
             return bool(skl_is_clf(self._model))
         except Exception:
@@ -68,6 +71,7 @@ class SklearnAdapter(BaseModelAdapter):
 
     def is_regressor(self) -> bool:
         from sklearn.base import is_regressor as skl_is_reg
+
         try:
             return bool(skl_is_reg(self._model))
         except Exception:

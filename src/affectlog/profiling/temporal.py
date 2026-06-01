@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.time import parse_iso
 
@@ -16,7 +16,7 @@ def compute_temporal_stats(path: Path | str, limit: int = 0) -> dict[str, Any]:
     session_counter: Counter[str] = Counter()
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:

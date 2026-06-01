@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.transform.maskott_csv_to_xapi import convert_maskott_csv_to_xapi
 

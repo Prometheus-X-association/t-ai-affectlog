@@ -53,7 +53,11 @@ def permutation_importance(
         "metric": metric,
         "n_repeats": n_repeats,
         "feature_importance": [
-            {"feature": f, "importance_mean": round(mean_importance[f], 6), "importance_std": round(std_importance[f], 6)}
+            {
+                "feature": f,
+                "importance_mean": round(mean_importance[f], 6),
+                "importance_std": round(std_importance[f], 6),
+            }
             for f in sorted_names
         ],
     }

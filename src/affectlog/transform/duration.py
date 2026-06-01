@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 from affectlog.core.time import to_iso8601_duration
 
 
-def duration_to_iso8601(value: object) -> Optional[str]:
+def duration_to_iso8601(value: object) -> str | None:
     """Convert various duration representations to ISO 8601 duration string."""
     if value is None:
         return None

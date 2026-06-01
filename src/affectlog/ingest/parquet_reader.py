@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator
 
 import polars as pl
 
 
-def iter_parquet_chunks(path: Path | str, chunk_size: int = 100_000) -> Generator[pl.DataFrame, None, None]:
+def iter_parquet_chunks(
+    path: Path | str, chunk_size: int = 100_000
+) -> Generator[pl.DataFrame, None, None]:
     path = Path(path)
     lf = pl.scan_parquet(path)
     total = lf.select(pl.len()).collect().item()

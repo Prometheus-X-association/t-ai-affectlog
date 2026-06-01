@@ -19,11 +19,9 @@ def build_odrl_policy(
         "uid": policy_id,
         "assigner": {"uid": assigner},
         "permission": [
-            {"action": p, "target": {"uid": asset_id}}
-            for p in (permissions or ["use"])
+            {"action": p, "target": {"uid": asset_id}} for p in (permissions or ["use"])
         ],
         "prohibition": [
-            {"action": p, "target": {"uid": asset_id}}
-            for p in (prohibitions or ["redistribute"])
+            {"action": p, "target": {"uid": asset_id}} for p in (prohibitions or ["redistribute"])
         ],
     }

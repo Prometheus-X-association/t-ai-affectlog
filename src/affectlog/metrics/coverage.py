@@ -12,7 +12,9 @@ from pathlib import Path
 from typing import Any
 
 
-def compute_coverage(path: Path | str, k_values: list[int] | None = None, limit: int = 0) -> dict[str, Any]:
+def compute_coverage(
+    path: Path | str, k_values: list[int] | None = None, limit: int = 0
+) -> dict[str, Any]:
     if k_values is None:
         k_values = [1, 5, 10, 20, 50]
     path = Path(path)
@@ -21,7 +23,7 @@ def compute_coverage(path: Path | str, k_values: list[int] | None = None, limit:
     resource_actors: dict[str, set[str]] = defaultdict(set)
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:

@@ -7,10 +7,9 @@ Produces a Markdown document with full audit context.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.time import now_iso
-
 
 SOP_TEMPLATE = """# Trustworthy AI Audit SOP
 ## Run: `{run_id}`
@@ -100,10 +99,10 @@ def build_sop(
     config_hash: str,
     schema_fields: list[str],
     row_count: int,
-    privacy_report: Optional[dict[str, Any]] = None,
-    metrics: Optional[dict[str, Any]] = None,
-    stages: Optional[list[dict[str, Any]]] = None,
-    artifacts: Optional[dict[str, str]] = None,
+    privacy_report: dict[str, Any] | None = None,
+    metrics: dict[str, Any] | None = None,
+    stages: list[dict[str, Any]] | None = None,  # noqa: ARG001
+    artifacts: dict[str, str] | None = None,
     source_platform: str = "Maskott/Tactileo",
     schema: str = "maskott_csv_v1",
 ) -> str:
@@ -120,12 +119,20 @@ def build_sop(
         resource_gini = metrics.get("resource_gini", 0)
         sparsity = metrics.get("sparsity_ratio", 0)
         if actor_gini and actor_gini > 0.6:
-            findings_lines.append(f"- **High actor concentration** (Gini={actor_gini:.3f}): top users dominate activity log.")
+            findings_lines.append(
+                f"- **High actor concentration** (Gini={actor_gini:.3f}): top users dominate activity log."
+            )
         if resource_gini and resource_gini > 0.6:
-            findings_lines.append(f"- **High resource concentration** (Gini={resource_gini:.3f}): a few resources account for most accesses.")
+            findings_lines.append(
+                f"- **High resource concentration** (Gini={resource_gini:.3f}): a few resources account for most accesses."
+            )
         if sparsity and sparsity > 0.95:
-            findings_lines.append(f"- **Very sparse entity-resource matrix** (sparsity={sparsity:.3f}): typical for real-world recommendation logs.")
-    findings_section = "\n".join(findings_lines) if findings_lines else "_Audit complete — no critical findings._"
+            findings_lines.append(
+                f"- **Very sparse entity-resource matrix** (sparsity={sparsity:.3f}): typical for real-world recommendation logs."
+            )
+    findings_section = (
+        "\n".join(findings_lines) if findings_lines else "_Audit complete — no critical findings._"
+    )
 
     artifact_lines = []
     if artifacts:

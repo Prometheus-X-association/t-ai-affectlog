@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import logging
 import uuid
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -32,7 +32,7 @@ from affectlog.version import __version__
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
     configure_logging(settings.log_level, settings.log_format)
     logging.getLogger(__name__).info("ALT-AI API starting — version %s", __version__)

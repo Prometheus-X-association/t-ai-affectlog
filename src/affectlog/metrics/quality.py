@@ -7,15 +7,18 @@ from pathlib import Path
 from typing import Any
 
 
-def compute_quality(path: Path | str, fields: list[str] | None = None, limit: int = 0) -> dict[str, Any]:
+def compute_quality(
+    path: Path | str, fields: list[str] | None = None, limit: int = 0
+) -> dict[str, Any]:
     """Compute missingness/completeness per field."""
     path = Path(path)
     from collections import defaultdict
+
     field_null: dict[str, int] = defaultdict(int)
     field_total: dict[str, int] = defaultdict(int)
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -47,8 +50,7 @@ def compute_quality(path: Path | str, fields: list[str] | None = None, limit: in
         }
 
     overall_completeness = (
-        sum(v["completeness"] for v in per_field.values()) / len(per_field)
-        if per_field else 0
+        sum(v["completeness"] for v in per_field.values()) / len(per_field) if per_field else 0
     )
 
     return {

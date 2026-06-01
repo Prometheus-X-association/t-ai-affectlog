@@ -9,11 +9,9 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
-import polars as pl
-
-from affectlog.core.time import parse_iso, to_iso8601_duration
+from affectlog.core.time import parse_iso
 from affectlog.ingest.csv_reader import read_maskott_csv
 from affectlog.privacy.pseudonymizer import Pseudonymizer
 from affectlog.transform.becomino_template import infer_becomino_template
@@ -26,9 +24,9 @@ logger = logging.getLogger(__name__)
 def row_to_xapi(
     row: dict[str, Any],
     *,
-    pseudonymizer: Optional[Pseudonymizer] = None,
-    verb_mapper: Optional[VerbMapper] = None,
-    template: Optional[dict[str, Any]] = None,
+    pseudonymizer: Pseudonymizer | None = None,
+    verb_mapper: VerbMapper | None = None,
+    template: dict[str, Any] | None = None,  # noqa: ARG001
     allow_raw: bool = False,
 ) -> dict[str, Any]:
     """Convert a single Maskott CSV row dict to a normalized xAPI statement dict."""
@@ -65,7 +63,7 @@ def row_to_xapi(
     if session_raw and pseudonymizer and not allow_raw:
         session_id = pseudonymizer.hash("ActivitySessionId", session_raw)
     else:
-        session_id = session_raw
+        session_id = session_raw  # type: ignore[assignment]
 
     # Duration
     duration_raw = row.get("Duration")
@@ -136,7 +134,7 @@ def row_to_xapi(
     return stmt
 
 
-def _parse_bool(val: object) -> Optional[bool]:
+def _parse_bool(val: object) -> bool | None:
     if val is None:
         return None
     if isinstance(val, bool):
@@ -154,12 +152,12 @@ def convert_maskott_csv_to_xapi(
     output_path: Path | str,
     *,
     chunk_size: int = 100_000,
-    template_path: Optional[Path | str] = None,
-    pseudonymizer: Optional[Pseudonymizer] = None,
-    verb_mapper: Optional[VerbMapper] = None,
+    template_path: Path | str | None = None,
+    pseudonymizer: Pseudonymizer | None = None,
+    verb_mapper: VerbMapper | None = None,
     allow_raw: bool = False,
     strict: bool = False,
-    invalid_output: Optional[Path] = None,
+    invalid_output: Path | None = None,
     progress: bool = True,
 ) -> dict[str, Any]:
     """
@@ -177,7 +175,7 @@ def convert_maskott_csv_to_xapi(
     total_out = 0
     error_count = 0
 
-    with open(output_path, "w", encoding="utf-8") as out_f:
+    with output_path.open("w", encoding="utf-8") as out_f:
         for chunk in read_maskott_csv(
             input_path,
             chunk_size=chunk_size,

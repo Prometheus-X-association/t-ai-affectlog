@@ -6,7 +6,7 @@ Produces a privacy_report.json for audit outputs.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.time import now_iso
 from affectlog.privacy.pii_detector import (
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class SecurityLayer:
     def __init__(
         self,
-        pseudonymizer: Optional[Pseudonymizer] = None,
+        pseudonymizer: Pseudonymizer | None = None,
         allow_raw: bool = False,
     ) -> None:
         self._pseudo = pseudonymizer or Pseudonymizer()
@@ -36,7 +36,9 @@ class SecurityLayer:
         return {
             "fields_inspected": fields,
             "pii_findings": findings,
-            "direct_identifiers": [f["field"] for f in findings if f["type"] == "direct_identifier"],
+            "direct_identifiers": [
+                f["field"] for f in findings if f["type"] == "direct_identifier"
+            ],
         }
 
     def inspect_sample(self, record: dict[str, Any]) -> list[dict[str, Any]]:
@@ -51,9 +53,9 @@ class SecurityLayer:
     def generate_privacy_report(
         self,
         schema_fields: list[str],
-        sample_record: Optional[dict[str, Any]] = None,
-        hash_fields: Optional[list[str]] = None,
-        suppress_fields: Optional[list[str]] = None,
+        sample_record: dict[str, Any] | None = None,
+        hash_fields: list[str] | None = None,
+        suppress_fields: list[str] | None = None,
     ) -> dict[str, Any]:
         schema_findings = scan_field_names(schema_fields)
         value_findings = scan_sample_values(sample_record) if sample_record else []

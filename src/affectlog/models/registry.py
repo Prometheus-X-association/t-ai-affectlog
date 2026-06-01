@@ -19,6 +19,7 @@ class ModelRegistry:
     def get(self, model_id: str) -> BaseModelAdapter:
         if model_id not in self._models:
             from affectlog.exceptions import ModelAdapterError
+
             raise ModelAdapterError(f"Model '{model_id}' not found in registry.")
         return self._models[model_id]
 

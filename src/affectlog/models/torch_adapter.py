@@ -16,9 +16,10 @@ class TorchAdapter(BaseModelAdapter):
         self._model = model
 
     @classmethod
-    def from_file(cls, path: Path | str) -> "TorchAdapter":
+    def from_file(cls, path: Path | str) -> TorchAdapter:
         try:
             import torch
+
             model = torch.jit.load(str(path))
             model.eval()
             return cls(model)
@@ -30,10 +31,11 @@ class TorchAdapter(BaseModelAdapter):
     def predict(self, X: np.ndarray | list[Any]) -> list[Any]:
         try:
             import torch
+
             t = torch.tensor(np.array(X, dtype=np.float32))
             with torch.no_grad():
                 out = self._model(t)
-            return out.numpy().tolist()
+            return out.numpy().tolist()  # type: ignore[no-any-return]
         except Exception as exc:
             raise ModelAdapterError(f"Torch prediction failed: {exc}") from exc
 

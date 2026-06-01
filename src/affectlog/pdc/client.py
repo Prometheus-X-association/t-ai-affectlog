@@ -8,9 +8,7 @@ This implementation provides a fully functional mock for tests and demos.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
-
-from affectlog.compliance.odrl import build_odrl_policy
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -42,24 +40,33 @@ class PDCClient:
             }
         try:
             import httpx
+
             resp = httpx.post(
                 f"{self._url}/artifacts/request",
                 headers={"Authorization": f"Bearer {self._token}"},
-                json={"policy_id": policy_id, "consent_token": consent_token, "artifact_ref": artifact_ref},
+                json={
+                    "policy_id": policy_id,
+                    "consent_token": consent_token,
+                    "artifact_ref": artifact_ref,
+                },
                 timeout=30,
             )
             resp.raise_for_status()
-            return resp.json()
+            return resp.json()  # type: ignore[no-any-return]
         except Exception as exc:
             from affectlog.exceptions import PDCError
+
             raise PDCError(f"PDC artifact request failed: {exc}") from exc
 
-    def evaluate_policy(self, odrl_policy: dict[str, Any], request_context: dict[str, Any]) -> dict[str, Any]:
+    def evaluate_policy(
+        self, odrl_policy: dict[str, Any], request_context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Evaluate an ODRL policy against a request context."""
         if self._mock:
             return {"allowed": True, "reason": "Mock evaluation"}
         try:
             import httpx
+
             resp = httpx.post(
                 f"{self._url}/policies/evaluate",
                 headers={"Authorization": f"Bearer {self._token}"},
@@ -67,7 +74,8 @@ class PDCClient:
                 timeout=30,
             )
             resp.raise_for_status()
-            return resp.json()
+            return resp.json()  # type: ignore[no-any-return]
         except Exception as exc:
             from affectlog.exceptions import PDCError
+
             raise PDCError(f"Policy evaluation failed: {exc}") from exc

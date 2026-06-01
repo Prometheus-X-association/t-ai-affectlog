@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.hashing import hmac_sha256, sha256_hash
 
@@ -23,9 +23,9 @@ class Pseudonymizer:
         secret: str = "",
         method: str = METHOD_HMAC,
         salt: str = "affectlog",
-        hash_fields: Optional[list[str]] = None,
-        suppress_fields: Optional[list[str]] = None,
-        redact_fields: Optional[list[str]] = None,
+        hash_fields: list[str] | None = None,
+        suppress_fields: list[str] | None = None,
+        redact_fields: list[str] | None = None,
         allow_raw: bool = False,
     ) -> None:
         self._secret = secret
@@ -65,7 +65,7 @@ class Pseudonymizer:
         return out
 
     @classmethod
-    def from_recipe(cls, privacy_cfg: dict[str, Any], secret: str = "") -> "Pseudonymizer":
+    def from_recipe(cls, privacy_cfg: dict[str, Any], secret: str = "") -> Pseudonymizer:
         return cls(
             secret=secret,
             method=privacy_cfg.get("method", METHOD_HMAC),

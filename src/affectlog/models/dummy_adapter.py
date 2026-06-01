@@ -33,7 +33,7 @@ class DummyAdapter(BaseModelAdapter):
         }
 
     @property
-    def feature_names(self) -> list[str]:  # type: ignore[override]
+    def feature_names(self) -> list[str]:
         return self._feature_names
 
     def is_classifier(self) -> bool:

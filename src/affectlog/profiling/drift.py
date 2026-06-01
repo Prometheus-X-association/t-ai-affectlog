@@ -17,7 +17,6 @@ def compute_drift(
 ) -> dict[str, Any]:
     """Compare resource distribution before and after *split_date*."""
     path = Path(path)
-    from datetime import timezone
     split_dt = parse_iso(split_date)
     if split_dt is None:
         raise ValueError(f"Cannot parse split_date: {split_date}")
@@ -26,7 +25,7 @@ def compute_drift(
     after: Counter[str] = Counter()
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -52,7 +51,10 @@ def compute_drift(
 
     # Compute Jensen–Shannon-like overlap
     all_keys = set(before) | set(after)
-    overlap = sum(min(before.get(k, 0) / max(total_before, 1), after.get(k, 0) / max(total_after, 1)) for k in all_keys)
+    overlap = sum(
+        min(before.get(k, 0) / max(total_before, 1), after.get(k, 0) / max(total_after, 1))
+        for k in all_keys
+    )
 
     return {
         "split_date": split_date,

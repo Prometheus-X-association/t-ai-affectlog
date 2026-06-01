@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import uuid
+from typing import Any
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class RequestIDMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next: Any) -> Response:  # type: ignore[override]
+    async def dispatch(self, request: Request, call_next: Any) -> Response:
         request_id = request.headers.get("X-Request-ID", uuid.uuid4().hex)
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
-        return response
+        return response  # type: ignore[no-any-return]

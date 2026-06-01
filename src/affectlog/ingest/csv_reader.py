@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator, Optional
+from typing import Any
 
 import polars as pl
 
@@ -12,7 +13,6 @@ from affectlog.exceptions import IngestError, SchemaValidationError
 from affectlog.ingest.large_file import (
     MASKOTT_REQUIRED_COLUMNS,
     iter_csv_chunks,
-    scan_csv_lazy,
     validate_csv_headers,
 )
 
@@ -23,9 +23,13 @@ BOOL_FALSE = {"false", "0", "no", "n", "f"}
 
 
 def _normalise_bool_col(series: pl.Series) -> pl.Series:
-    return series.cast(pl.Utf8, strict=False).str.to_lowercase().map_elements(
-        lambda v: True if v in BOOL_TRUE else (False if v in BOOL_FALSE else None),
-        return_dtype=pl.Boolean,
+    return (
+        series.cast(pl.Utf8, strict=False)
+        .str.to_lowercase()
+        .map_elements(
+            lambda v: True if v in BOOL_TRUE else (False if v in BOOL_FALSE else None),
+            return_dtype=pl.Boolean,
+        )
     )
 
 
@@ -65,7 +69,7 @@ def read_maskott_csv(
     path: Path | str,
     chunk_size: int = 100_000,
     strict: bool = False,
-    invalid_output: Optional[Path] = None,
+    invalid_output: Path | None = None,
 ) -> Generator[pl.DataFrame, None, None]:
     """
     Validate and stream-read a Maskott CSV.
@@ -77,9 +81,7 @@ def read_maskott_csv(
     path = Path(path)
     report = validate_csv_headers(path, MASKOTT_REQUIRED_COLUMNS)
     if not report["valid"]:
-        raise SchemaValidationError(
-            f"Missing columns: {report['missing_columns']}"
-        )
+        raise SchemaValidationError(f"Missing columns: {report['missing_columns']}")
     if report["extra_columns"]:
         logger.warning("Extra columns detected (will be preserved): %s", report["extra_columns"])
 
@@ -89,17 +91,16 @@ def read_maskott_csv(
         valid, invalid = _normalise_chunk(chunk)
         if not invalid.is_empty():
             if strict:
-                raise IngestError(
-                    f"Found {len(invalid)} invalid rows in strict mode."
-                )
+                raise IngestError(f"Found {len(invalid)} invalid rows in strict mode.")
             invalid_rows.extend(invalid.to_dicts())
             logger.warning("Skipping %d invalid rows in this chunk.", len(invalid))
         yield valid
 
     if invalid_output and invalid_rows:
         import json
+
         invalid_output.parent.mkdir(parents=True, exist_ok=True)
-        with open(invalid_output, "w") as f:
+        with invalid_output.open("w") as f:
             for row in invalid_rows:
                 f.write(json.dumps(row, default=str) + "\n")
         logger.info("Wrote %d invalid rows to %s", len(invalid_rows), invalid_output)

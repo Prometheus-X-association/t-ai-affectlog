@@ -23,10 +23,13 @@ def _run_audit_bg(run_id: str, req: AuditRunRequest) -> None:
     try:
         from affectlog.recipes.loader import load_recipe
         from affectlog.recipes.runner import run_audit
+
         recipe = load_recipe(req.recipe)
         out_dir = Path(req.output_dir or (settings.runs_dir / run_id))
         ctx = run_audit(
-            req.input_path, recipe, out_dir,
+            req.input_path,
+            recipe,
+            out_dir,
             hash_secret=settings.hash_secret,
             chunk_size=req.chunk_size,
         )
@@ -41,9 +44,16 @@ def _run_audit_bg(run_id: str, req: AuditRunRequest) -> None:
 
 
 @router.post("/run", response_model=AuditRunResponse, summary="Start an audit pipeline run")
-async def run_audit_endpoint(req: AuditRunRequest, background_tasks: BackgroundTasks) -> AuditRunResponse:
+async def run_audit_endpoint(
+    req: AuditRunRequest, background_tasks: BackgroundTasks
+) -> AuditRunResponse:
     run_id = new_run_id()
-    _run_status[run_id] = {"run_id": run_id, "status": "running", "recipe": req.recipe, "artifacts": {}}
+    _run_status[run_id] = {
+        "run_id": run_id,
+        "status": "running",
+        "recipe": req.recipe,
+        "artifacts": {},
+    }
     background_tasks.add_task(_run_audit_bg, run_id, req)
     return AuditRunResponse(run_id=run_id, status="running", recipe=req.recipe)
 
@@ -94,7 +104,7 @@ async def get_compliance_graph(run_id: str) -> dict[str, Any]:
     jld_path = Path(settings.runs_dir) / run_id / "compliance_graph.jsonld"
     if not jld_path.exists():
         raise HTTPException(status_code=404, detail="compliance_graph.jsonld not found.")
-    return json.loads(jld_path.read_text())
+    return json.loads(jld_path.read_text())  # type: ignore[no-any-return]
 
 
 @router.get("/{run_id}/dashboard", summary="Get dashboard payload for this run")
@@ -102,8 +112,10 @@ async def get_dashboard(run_id: str) -> dict[str, Any]:
     settings = get_settings()
     dash_path = Path(settings.runs_dir) / run_id / "dashboard_payload.json"
     if not dash_path.exists():
-        raise HTTPException(status_code=404, detail="dashboard_payload.json not found for this run.")
-    return json.loads(dash_path.read_text())
+        raise HTTPException(
+            status_code=404, detail="dashboard_payload.json not found for this run."
+        )
+    return json.loads(dash_path.read_text())  # type: ignore[no-any-return]
 
 
 @router.get("", summary="List all audit runs")
@@ -121,11 +133,13 @@ async def list_runs() -> dict[str, Any]:
         if manifest.exists():
             try:
                 m = json.loads(manifest.read_text())
-                entry.update({
-                    "recipe": m.get("recipe_name", ""),
-                    "status": "completed",
-                    "artifacts": list(m.get("artifacts", {}).keys()),
-                })
+                entry.update(
+                    {
+                        "recipe": m.get("recipe_name", ""),
+                        "status": "completed",
+                        "artifacts": list(m.get("artifacts", {}).keys()),
+                    }
+                )
             except Exception:
                 entry["status"] = "unknown"
         else:

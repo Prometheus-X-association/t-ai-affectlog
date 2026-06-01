@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 
-def iter_jsonl(path: Path | str, chunk_size: int = 10_000) -> Generator[list[dict[str, Any]], None, None]:
+def iter_jsonl(
+    path: Path | str, chunk_size: int = 10_000
+) -> Generator[list[dict[str, Any]], None, None]:
     """Yield lists of dicts from a JSONL file in chunks."""
     path = Path(path)
     chunk: list[dict[str, Any]] = []
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -28,5 +31,5 @@ def iter_jsonl(path: Path | str, chunk_size: int = 10_000) -> Generator[list[dic
 
 
 def read_json(path: Path | str) -> Any:
-    with open(path, encoding="utf-8") as f:
+    with Path(path).open(encoding="utf-8") as f:
         return json.load(f)

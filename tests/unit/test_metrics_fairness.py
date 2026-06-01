@@ -1,7 +1,7 @@
 """Tests: Fairness / representation metrics."""
 
 import json
-import pytest
+
 from affectlog.metrics.fairness import compute_fairness, compute_representation
 from affectlog.metrics.representation import representation_index
 

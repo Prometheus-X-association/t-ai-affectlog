@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 from pathlib import Path
 from typing import Any
 
@@ -21,15 +22,14 @@ def profile_schema(path: Path | str, sample_rows: int = 10_000) -> dict[str, Any
         sample = lf.limit(sample_rows).collect()
     elif ext in (".jsonl", ".json"):
         import json as _json
-        rows = []
-        with open(path) as f:
+
+        rows: list[dict[str, Any]] = []
+        with path.open() as f:
             for line in f:
                 line = line.strip()
                 if line and len(rows) < sample_rows:
-                    try:
+                    with contextlib.suppress(Exception):
                         rows.append(_json.loads(line))
-                    except Exception:
-                        pass
         sample = pl.from_dicts(rows) if rows else pl.DataFrame()
     else:
         raise ValueError(f"Unsupported file type: {ext}")
@@ -40,15 +40,17 @@ def profile_schema(path: Path | str, sample_rows: int = 10_000) -> dict[str, Any
         null_count = s.null_count()
         total = len(s)
         n_unique = s.n_unique()
-        fields.append({
-            "name": col,
-            "dtype": str(s.dtype),
-            "null_count": null_count,
-            "null_fraction": round(null_count / total, 4) if total else 0,
-            "n_unique": n_unique,
-            "uniqueness_ratio": round(n_unique / total, 4) if total else 0,
-            "is_pii_field": is_pii_field(col),
-        })
+        fields.append(
+            {
+                "name": col,
+                "dtype": str(s.dtype),
+                "null_count": null_count,
+                "null_fraction": round(null_count / total, 4) if total else 0,
+                "n_unique": n_unique,
+                "uniqueness_ratio": round(n_unique / total, 4) if total else 0,
+                "is_pii_field": is_pii_field(col),
+            }
+        )
 
     return {
         "file": str(path),

@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import uuid
-from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 
 from affectlog.api.dependencies import get_request_id
 from affectlog.config import get_settings
@@ -37,28 +36,41 @@ async def list_available() -> dict[str, Any]:
         if not subdir.exists():
             continue
         for f in sorted(subdir.rglob("*")):
-            if f.is_file() and f.suffix.lower() in {".csv", ".jsonl", ".json"} and f.name != ".gitkeep":
-                files.append({
-                    "path": str(f),
-                    "name": f.name,
-                    "size_bytes": f.stat().st_size,
-                    "location": label,
-                    "format": f.suffix.lstrip("."),
-                })
+            if (
+                f.is_file()
+                and f.suffix.lower() in {".csv", ".jsonl", ".json"}
+                and f.name != ".gitkeep"
+            ):
+                files.append(
+                    {
+                        "path": str(f),
+                        "name": f.name,
+                        "size_bytes": f.stat().st_size,
+                        "location": label,
+                        "format": f.suffix.lstrip("."),
+                    }
+                )
     return {"files": files}
 
 
 @router.post("/validate", response_model=DatasetValidateResponse, summary="Validate CSV schema")
 async def validate_dataset(
     req: DatasetValidateRequest,
-    request_id: Annotated[str, Depends(get_request_id)],
+    _request_id: Annotated[str, Depends(get_request_id)],
 ) -> DatasetValidateResponse:
-    from affectlog.ingest.validators import validate_schema
     from affectlog.exceptions import IngestError
+    from affectlog.ingest.validators import validate_schema
+
     try:
         result = validate_schema(req.file_path, req.schema_name)
     except (IngestError, FileNotFoundError, Exception) as exc:
-        result = {"valid": False, "error": str(exc), "actual_columns": [], "missing_columns": [], "extra_columns": []}
+        result = {
+            "valid": False,
+            "error": str(exc),
+            "actual_columns": [],
+            "missing_columns": [],
+            "extra_columns": [],
+        }
     return DatasetValidateResponse(
         valid=result.get("valid", False),
         schema_name=req.schema_name,
@@ -69,7 +81,9 @@ async def validate_dataset(
     )
 
 
-@router.post("/ingest", response_model=DatasetIngestResponse, summary="Register a dataset for processing")
+@router.post(
+    "/ingest", response_model=DatasetIngestResponse, summary="Register a dataset for processing"
+)
 async def ingest_dataset(req: DatasetIngestRequest) -> DatasetIngestResponse:
     dataset_id = f"ds_{uuid.uuid4().hex[:8]}"
     _dataset_registry[dataset_id] = {
@@ -94,7 +108,9 @@ async def get_dataset(dataset_id: str) -> dict[str, Any]:
 
 
 @router.post("/{dataset_id}/transform", response_model=DatasetTransformResponse)
-async def transform_dataset(dataset_id: str, req: DatasetTransformRequest) -> DatasetTransformResponse:
+async def transform_dataset(
+    dataset_id: str, req: DatasetTransformRequest
+) -> DatasetTransformResponse:
     if dataset_id not in _dataset_registry:
         raise HTTPException(status_code=404, detail=f"Dataset '{dataset_id}' not found.")
     ds = _dataset_registry[dataset_id]
@@ -137,6 +153,7 @@ async def profile_dataset(dataset_id: str) -> dict[str, Any]:
         raise HTTPException(status_code=404, detail=f"Dataset '{dataset_id}' not found.")
     ds = _dataset_registry[dataset_id]
     from affectlog.profiling.schema_profiler import profile_schema
+
     try:
         return profile_schema(ds["file_path"])
     except Exception as exc:

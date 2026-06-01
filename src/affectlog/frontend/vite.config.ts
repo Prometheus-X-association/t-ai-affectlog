@@ -7,6 +7,9 @@ export default defineConfig({
     proxy: {
       "/v1": "http://localhost:8000",
       "/healthz": "http://localhost:8000",
+      "/docs": "http://localhost:8000",
+      "/redoc": "http://localhost:8000",
+      "/openapi.json": "http://localhost:8000",
     },
   },
 });

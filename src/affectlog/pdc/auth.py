@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Optional
 
-
-def get_bearer_token(pdc_url: str, client_id: str, client_secret: str) -> Optional[str]:
+def get_bearer_token(_pdc_url: str, _client_id: str, _client_secret: str) -> str | None:
     """Obtain a bearer token from the PDC OAuth endpoint (stub)."""
     # In production: POST to pdc_url/oauth/token with client credentials
     return None

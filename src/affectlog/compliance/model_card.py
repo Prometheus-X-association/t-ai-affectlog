@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.time import now_iso
 
@@ -12,8 +12,8 @@ from affectlog.core.time import now_iso
 def build_model_card(
     model_id: str,
     adapter_meta: dict[str, Any],
-    feature_importance: Optional[dict[str, Any]] = None,
-    comparison: Optional[dict[str, Any]] = None,
+    feature_importance: dict[str, Any] | None = None,
+    comparison: dict[str, Any] | None = None,
     dataset_name: str = "unknown",
     run_id: str = "unknown",
 ) -> dict[str, Any]:
@@ -51,7 +51,10 @@ def build_model_card(
             "technical_documentation_status": "partial",
             "risk_category": "limited_risk",
             "human_oversight": True,
-            "transparency_measures": ["SHAP / permutation feature importance", "model card publication"],
+            "transparency_measures": [
+                "SHAP / permutation feature importance",
+                "model card publication",
+            ],
         },
     }
 

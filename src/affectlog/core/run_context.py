@@ -6,10 +6,10 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.ids import new_run_id
-from affectlog.core.time import now_iso, now_utc
+from affectlog.core.time import now_iso
 
 
 @dataclass
@@ -17,15 +17,15 @@ class StageResult:
     name: str
     status: str = "pending"  # "ok" | "warning" | "error" | "skipped" | "pending"
     start: str = field(default_factory=now_iso)
-    end: Optional[str] = None
+    end: str | None = None
     duration_s: float = 0.0
-    input_artifact: Optional[str] = None
-    output_artifact: Optional[str] = None
+    input_artifact: str | None = None
+    output_artifact: str | None = None
     record_count_in: int = 0
     record_count_out: int = 0
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
-    config_hash: Optional[str] = None
+    config_hash: str | None = None
     meta: dict[str, Any] = field(default_factory=dict)
 
     def finish(self, status: str = "ok") -> None:

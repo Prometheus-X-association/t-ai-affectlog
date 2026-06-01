@@ -10,20 +10,18 @@ Stages:
 
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.compliance.ai_act_annex_iv import build_annex_iv, export_annex_iv
-from affectlog.compliance.data_card import build_data_card, export_data_card
+from affectlog.compliance.data_card import build_data_card
 from affectlog.compliance.gdpr import export_field_inventory
 from affectlog.compliance.jsonld import build_compliance_graph, export_jsonld
 from affectlog.compliance.sop import build_sop, export_sop
 from affectlog.core.artifact_store import ArtifactStore
 from affectlog.core.hashing import config_hash as compute_config_hash
 from affectlog.core.run_context import RunContext
-from affectlog.core.time import now_iso
 from affectlog.ingest.large_file import MASKOTT_REQUIRED_COLUMNS, validate_csv_headers
 from affectlog.metrics.concentration import compute_concentration
 from affectlog.metrics.coverage import compute_coverage
@@ -49,7 +47,7 @@ def run_audit(
     *,
     hash_secret: str = "",
     chunk_size: int = 100_000,
-    template_path: Optional[Path] = None,
+    template_path: Path | None = None,
 ) -> RunContext:
     """Run the full audit pipeline for a given input and recipe."""
     input_path = Path(input_path)
@@ -104,7 +102,7 @@ def run_audit(
 
     # ── Stage: normalize_xapi ────────────────────────────────────────
     s = ctx.new_stage("normalize_xapi")
-    vm = VerbMapper(recipe.xapi.verb_mapping)
+    vm = VerbMapper(recipe.xapi.verb_mapping)  # type: ignore[arg-type]
     normalized_path = run_dir / "normalized.jsonl"
 
     if ext == ".csv":
@@ -206,7 +204,10 @@ def run_audit(
             schema_fields=MASKOTT_REQUIRED_COLUMNS,
             row_count=total_rows,
             privacy_report=privacy_report,
-            descriptive_stats={"min_timestamp": temp_stats.get("min_timestamp", ""), "max_timestamp": temp_stats.get("max_timestamp", "")},
+            descriptive_stats={
+                "min_timestamp": temp_stats.get("min_timestamp", ""),
+                "max_timestamp": temp_stats.get("max_timestamp", ""),
+            },
             recipe_name=recipe.name,
             run_id=ctx.run_id,
         )

@@ -2,9 +2,10 @@
 
 import numpy as np
 import pytest
-from affectlog.models.dummy_adapter import DummyAdapter
-from affectlog.explanations.generator import ExplanationGenerator
+
 from affectlog.explanations.feature_importance import permutation_importance
+from affectlog.explanations.generator import ExplanationGenerator
+from affectlog.models.dummy_adapter import DummyAdapter
 
 
 def test_permutation_importance_returns_features():
@@ -32,6 +33,7 @@ def test_explanation_generator_generates():
 
 def test_compare_models():
     from affectlog.explanations.comparison import compare_models
+
     a1 = DummyAdapter(n_classes=2)
     a2 = DummyAdapter(n_classes=2)
     X = np.ones((10, 3))

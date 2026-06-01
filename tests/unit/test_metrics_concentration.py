@@ -1,9 +1,8 @@
 """Tests: Gini index and concentration metrics."""
 
 import json
-import math
-import pytest
-from affectlog.metrics.concentration import gini_index, compute_concentration
+
+from affectlog.metrics.concentration import compute_concentration, gini_index
 
 
 def test_gini_uniform():

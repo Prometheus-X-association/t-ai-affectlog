@@ -7,10 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import PlainTextResponse
 
 from affectlog.config import get_settings
-from affectlog.schemas.api import ComplianceJSONLDRequest, DataCardRequest, SOPResponse
+from affectlog.schemas.api import ComplianceJSONLDRequest, DataCardRequest
 
 router = APIRouter(prefix="/v1/compliance", tags=["Compliance"])
 
@@ -18,6 +17,7 @@ router = APIRouter(prefix="/v1/compliance", tags=["Compliance"])
 @router.post("/jsonld", summary="Build and return compliance JSON-LD graph")
 async def build_jsonld(req: ComplianceJSONLDRequest) -> dict[str, Any]:
     from affectlog.compliance.jsonld import build_compliance_graph
+
     graph = build_compliance_graph(
         run_id=req.run_id,
         dataset_name=req.dataset_name,
@@ -32,8 +32,9 @@ async def build_data_card_endpoint(req: DataCardRequest) -> dict[str, Any]:
     run_dir = Path(settings.runs_dir) / req.run_id
     dc_path = run_dir / "data_card.json"
     if dc_path.exists():
-        return json.loads(dc_path.read_text())
+        return json.loads(dc_path.read_text())  # type: ignore[no-any-return]
     from affectlog.compliance.data_card import build_data_card
+
     return build_data_card(req.dataset_name, [], 0, run_id=req.run_id)
 
 
@@ -41,6 +42,7 @@ async def build_data_card_endpoint(req: DataCardRequest) -> dict[str, Any]:
 async def build_model_card_endpoint(model_id: str, run_id: str) -> dict[str, Any]:
     from affectlog.compliance.model_card import build_model_card
     from affectlog.models.registry import get_registry
+
     registry = get_registry()
     try:
         adapter = registry.get(model_id)

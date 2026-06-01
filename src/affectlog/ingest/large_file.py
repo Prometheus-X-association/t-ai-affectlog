@@ -7,8 +7,8 @@ chunked iteration, and streaming export.
 from __future__ import annotations
 
 import logging
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator, Optional
 
 import polars as pl
 
@@ -34,7 +34,7 @@ MASKOTT_REQUIRED_COLUMNS = [
 
 def scan_csv_lazy(
     path: Path | str,
-    chunk_size: int = 100_000,
+    _chunk_size: int = 100_000,
     infer_schema_length: int = 10_000,
 ) -> pl.LazyFrame:
     """Return a Polars LazyFrame for a CSV (no data loaded yet)."""
@@ -58,7 +58,7 @@ def iter_csv_chunks(
     path: Path | str,
     chunk_size: int = 100_000,
     *,
-    columns: Optional[list[str]] = None,
+    columns: list[str] | None = None,
 ) -> Generator[pl.DataFrame, None, None]:
     """Yield DataFrames in streaming chunks without loading all rows at once."""
     path = Path(path)

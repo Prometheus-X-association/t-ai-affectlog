@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -38,7 +37,9 @@ def load_recipe(path: Path | str) -> Recipe:
     privacy = PrivacyConfig(
         pseudonymize=priv_raw.get("pseudonymize", True),
         method=priv_raw.get("method", "hmac_sha256"),
-        hash_fields=priv_raw.get("hash_fields", ["_id", "EntityId", "EntityUaiCode", "ActivitySessionId"]),
+        hash_fields=priv_raw.get(
+            "hash_fields", ["_id", "EntityId", "EntityUaiCode", "ActivitySessionId"]
+        ),
         suppress_fields=priv_raw.get("suppress_fields", []),
         redact_fields=priv_raw.get("redact_fields", []),
         allow_raw_identifiers=priv_raw.get("allow_raw_identifiers", False),

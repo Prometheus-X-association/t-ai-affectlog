@@ -6,7 +6,8 @@ Only computed when prediction data and ground-truth expected data are available.
 from __future__ import annotations
 
 import math
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 
 def precision_at_k(recommended: Sequence[str], relevant: Sequence[str], k: int) -> float:
@@ -28,11 +29,7 @@ def hit_rate_at_k(recommended: Sequence[str], relevant: Sequence[str], k: int) -
 
 def dcg_at_k(recommended: Sequence[str], relevant: Sequence[str], k: int) -> float:
     rec_k = list(recommended)[:k]
-    return sum(
-        1.0 / math.log2(i + 2)
-        for i, r in enumerate(rec_k)
-        if r in relevant
-    )
+    return sum(1.0 / math.log2(i + 2) for i, r in enumerate(rec_k) if r in relevant)
 
 
 def ndcg_at_k(recommended: Sequence[str], relevant: Sequence[str], k: int) -> float:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -17,9 +17,18 @@ class HealthResponse(BaseModel):
 # ── Datasets ─────────────────────────────────────────────────────────
 class DatasetValidateRequest(BaseModel):
     file_path: str = Field(description="Absolute or relative path to the input file")
-    schema_name: str = Field(default="maskott_csv_v1", description="Named schema to validate against")
+    schema_name: str = Field(
+        default="maskott_csv_v1", description="Named schema to validate against"
+    )
 
-    model_config = {"json_schema_extra": {"example": {"file_path": "data/samples/maskott_csv_sample.csv", "schema_name": "maskott_csv_v1"}}}
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "file_path": "data/samples/maskott_csv_sample.csv",
+                "schema_name": "maskott_csv_v1",
+            }
+        }
+    }
 
 
 class DatasetValidateResponse(BaseModel):
@@ -28,7 +37,7 @@ class DatasetValidateResponse(BaseModel):
     actual_columns: list[str] = []
     missing_columns: list[str] = []
     extra_columns: list[str] = []
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class DatasetIngestRequest(BaseModel):
@@ -45,9 +54,9 @@ class DatasetIngestResponse(BaseModel):
 
 class DatasetTransformRequest(BaseModel):
     recipe: str = "configs/recipes/maskott_tactileo.yaml"
-    output_path: Optional[str] = None
+    output_path: str | None = None
     chunk_size: int = 100_000
-    template_path: Optional[str] = None
+    template_path: str | None = None
 
 
 class DatasetTransformResponse(BaseModel):
@@ -62,10 +71,17 @@ class DatasetTransformResponse(BaseModel):
 class AuditRunRequest(BaseModel):
     input_path: str
     recipe: str = "configs/recipes/maskott_tactileo.yaml"
-    output_dir: Optional[str] = None
+    output_dir: str | None = None
     chunk_size: int = 100_000
 
-    model_config = {"json_schema_extra": {"example": {"input_path": "data/processed/maskott_1m.normalized.jsonl", "recipe": "configs/recipes/maskott_tactileo.yaml"}}}
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "input_path": "data/processed/maskott_1m.normalized.jsonl",
+                "recipe": "configs/recipes/maskott_tactileo.yaml",
+            }
+        }
+    }
 
 
 class AuditRunResponse(BaseModel):
@@ -84,7 +100,7 @@ class AuditMetricsResponse(BaseModel):
 class ModelRegisterRequest(BaseModel):
     model_path: str
     adapter_type: str = Field(description="sklearn | onnx | torch | tensorflow | http | dummy")
-    model_id: Optional[str] = None
+    model_id: str | None = None
     feature_names: list[str] = []
 
 
@@ -146,4 +162,4 @@ class PDCPolicyResponse(BaseModel):
 # ── Errors ────────────────────────────────────────────────────────────
 class ErrorResponse(BaseModel):
     detail: str
-    request_id: Optional[str] = None
+    request_id: str | None = None

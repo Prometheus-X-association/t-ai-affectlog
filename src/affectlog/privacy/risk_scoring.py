@@ -13,7 +13,7 @@ def compute_risk_score(
     Compute a 0–10 risk score based on detected PII types.
     Higher score = more re-identification risk.
     """
-    score = 0
+    score: float = 0
     direct = [f for f in field_findings if f.get("type") == "direct_identifier"]
     quasi = [f for f in field_findings if f.get("type") == "quasi_identifier"]
 

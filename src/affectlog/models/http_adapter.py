@@ -20,10 +20,11 @@ class HttpAdapter(BaseModelAdapter):
     def predict(self, X: np.ndarray | list[Any]) -> list[Any]:
         try:
             import httpx
+
             payload = {"instances": (X.tolist() if hasattr(X, "tolist") else X)}
             resp = httpx.post(self._url, json=payload, headers=self._headers, timeout=30)
             resp.raise_for_status()
-            return resp.json().get("predictions", [])
+            return resp.json().get("predictions", [])  # type: ignore[no-any-return]
         except Exception as exc:
             raise ModelAdapterError(f"HTTP prediction failed: {exc}") from exc
 

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -47,6 +46,7 @@ class Settings(BaseSettings):
     def warn_empty_secret(cls, v: str) -> str:
         if not v:
             import warnings
+
             warnings.warn(
                 "AFFECTLOG_HASH_SECRET is not set — using empty string. "
                 "Set a strong secret in production.",

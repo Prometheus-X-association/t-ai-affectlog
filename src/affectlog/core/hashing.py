@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
-import os
+from pathlib import Path
 
 
 def sha256_hash(value: str, salt: str = "") -> str:
@@ -30,7 +30,7 @@ def config_hash(config_dict: dict) -> str:  # type: ignore[type-arg]
 def file_hash(path: str) -> str:
     """SHA-256 of a file's contents (streaming)."""
     h = hashlib.sha256()
-    with open(path, "rb") as f:
+    with Path(path).open("rb") as f:
         for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()

@@ -9,9 +9,9 @@ based on activity strata only.
 from __future__ import annotations
 
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 
 def compute_fairness(
@@ -27,7 +27,7 @@ def compute_fairness(
     group_counter: Counter[str] = Counter()
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -53,9 +53,7 @@ def compute_fairness(
     min_c = min(counts)
     mean_c = sum(counts) / len(counts)
 
-    representation_index = {
-        g: round(c / mean_c, 4) for g, c in group_counter.items()
-    }
+    representation_index = {g: round(c / mean_c, 4) for g, c in group_counter.items()}
 
     underrepresented = [g for g, ri in representation_index.items() if ri < 0.5]
     overrepresented = [g for g, ri in representation_index.items() if ri > 2.0]

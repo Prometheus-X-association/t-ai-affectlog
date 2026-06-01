@@ -16,9 +16,10 @@ class TensorFlowAdapter(BaseModelAdapter):
         self._model = model
 
     @classmethod
-    def from_file(cls, path: Path | str) -> "TensorFlowAdapter":
+    def from_file(cls, path: Path | str) -> TensorFlowAdapter:
         try:
-            import tensorflow as tf  # type: ignore[import]
+            import tensorflow as tf
+
             model = tf.keras.models.load_model(str(path))
             return cls(model)
         except ImportError as exc:
@@ -29,7 +30,7 @@ class TensorFlowAdapter(BaseModelAdapter):
     def predict(self, X: np.ndarray | list[Any]) -> list[Any]:
         try:
             arr = np.array(X, dtype=np.float32)
-            return self._model.predict(arr).tolist()
+            return self._model.predict(arr).tolist()  # type: ignore[no-any-return]
         except Exception as exc:
             raise ModelAdapterError(f"TF prediction failed: {exc}") from exc
 

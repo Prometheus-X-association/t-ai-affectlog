@@ -20,7 +20,7 @@ def compute_sparsity(path: Path | str, limit: int = 0) -> dict[str, Any]:
     interactions: set[tuple[str, str]] = set()
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -60,6 +60,8 @@ def compute_sparsity(path: Path | str, limit: int = 0) -> dict[str, Any]:
         "interpretation": (
             "Very sparse — typical of real-world recommendation datasets"
             if sparsity > 0.95
-            else "Moderately sparse" if sparsity > 0.7 else "Dense"
+            else "Moderately sparse"
+            if sparsity > 0.7
+            else "Dense"
         ),
     }

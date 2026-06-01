@@ -7,7 +7,6 @@ from pathlib import Path
 from affectlog.recipes.base import Recipe
 from affectlog.recipes.loader import load_recipe
 
-
 RECIPE_SEARCH_DIRS: list[Path] = [
     Path("configs/recipes"),
     Path("~/.affectlog/recipes").expanduser(),

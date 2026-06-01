@@ -17,7 +17,7 @@ async def mock_artifact_request(body: dict) -> dict:  # type: ignore[type-arg]
 
 
 @mock_pdc.post("/policies/evaluate")
-async def mock_policy_eval(body: dict) -> dict:  # type: ignore[type-arg]
+async def mock_policy_eval(_body: dict) -> dict:  # type: ignore[type-arg]
     return {"allowed": True, "reason": "mock_always_allow"}
 
 

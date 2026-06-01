@@ -19,7 +19,11 @@ async def request_model_artifacts(req: PDCPolicyRequest) -> dict:  # type: ignor
     }
 
 
-@router.post("/mock/policies/evaluate", response_model=PDCPolicyResponse, summary="Evaluate ODRL policy (mock)")
+@router.post(
+    "/mock/policies/evaluate",
+    response_model=PDCPolicyResponse,
+    summary="Evaluate ODRL policy (mock)",
+)
 async def evaluate_policy(req: PDCPolicyRequest) -> PDCPolicyResponse:
     return PDCPolicyResponse(
         allowed=True,

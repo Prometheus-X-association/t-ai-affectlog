@@ -1,7 +1,7 @@
 """Tests: Coverage@K metrics."""
 
 import json
-import pytest
+
 from affectlog.metrics.coverage import compute_coverage
 
 

@@ -17,20 +17,23 @@ class OnnxAdapter(BaseModelAdapter):
         self._input_name = input_name or session.get_inputs()[0].name
 
     @classmethod
-    def from_file(cls, path: Path | str) -> "OnnxAdapter":
+    def from_file(cls, path: Path | str) -> OnnxAdapter:
         try:
             import onnxruntime as ort
+
             sess = ort.InferenceSession(str(path))
             return cls(sess)
         except ImportError as exc:
-            raise ModelAdapterError("onnxruntime not installed. Install with: pip install onnxruntime") from exc
+            raise ModelAdapterError(
+                "onnxruntime not installed. Install with: pip install onnxruntime"
+            ) from exc
         except Exception as exc:
             raise ModelAdapterError(f"Cannot load ONNX model from {path}: {exc}") from exc
 
     def predict(self, X: np.ndarray | list[Any]) -> list[Any]:
         arr = np.array(X, dtype=np.float32)
         result = self._session.run(None, {self._input_name: arr})
-        return result[0].tolist()
+        return result[0].tolist()  # type: ignore[no-any-return]
 
     def metadata(self) -> dict[str, Any]:
         inputs = self._session.get_inputs()

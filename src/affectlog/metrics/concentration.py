@@ -9,8 +9,9 @@ from __future__ import annotations
 
 import json
 from collections import Counter
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 
 def gini_index(counts: Sequence[float]) -> float:
@@ -37,7 +38,7 @@ def compute_concentration(path: Path | str, limit: int = 0) -> dict[str, Any]:
     resource_counter: Counter[str] = Counter()
     total = 0
 
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -82,7 +83,11 @@ def compute_concentration(path: Path | str, limit: int = 0) -> dict[str, Any]:
         "unique_actors": len(actor_counter),
         "unique_resources": len(resource_counter),
         "interpretation": {
-            "actor_gini": "High concentration — a few users generate most activity" if actor_gini > 0.6 else "Moderate/low concentration",
-            "resource_gini": "High concentration — a few resources dominate access" if resource_gini > 0.6 else "Moderate/low concentration",
+            "actor_gini": "High concentration — a few users generate most activity"
+            if actor_gini > 0.6
+            else "Moderate/low concentration",
+            "resource_gini": "High concentration — a few resources dominate access"
+            if resource_gini > 0.6
+            else "Moderate/low concentration",
         },
     }

@@ -7,7 +7,7 @@ Supports SHAP (if installed) and permutation importance fallback.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -24,7 +24,7 @@ class ExplanationGenerator:
     def generate_feature_importance(
         self,
         X: np.ndarray,
-        y: Optional[np.ndarray] = None,
+        y: np.ndarray | None = None,
         method: str = "auto",
         n_repeats: int = 5,
     ) -> dict[str, Any]:
@@ -63,11 +63,9 @@ class ExplanationGenerator:
         other: BaseModelAdapter,
         X: np.ndarray,
         y: np.ndarray,
-        k: int = 5,
+        _k: int = 5,
     ) -> dict[str, Any]:
         """Compare this model vs *other* on dataset X, y."""
-        from sklearn.model_selection import cross_val_score  # type: ignore[import]
-        import warnings
 
         def cv_scores(adapter: BaseModelAdapter) -> dict[str, Any]:
             preds = adapter.predict(X)
@@ -82,7 +80,8 @@ class ExplanationGenerator:
         }
 
     def _shap_importance(self, X: np.ndarray) -> dict[str, Any]:
-        import shap  # type: ignore[import]
+        import shap
+
         explainer = shap.Explainer(self._adapter.predict, X[:100])
         shap_values = explainer(X[:100])
         mean_abs = np.abs(shap_values.values).mean(axis=0)
@@ -91,8 +90,10 @@ class ExplanationGenerator:
         return {
             "method": "shap",
             "feature_importance": [
-                {"feature": feature_names[i] if i < len(feature_names) else f"f{i}",
-                 "importance_mean": round(float(mean_abs[i]), 6)}
+                {
+                    "feature": feature_names[i] if i < len(feature_names) else f"f{i}",
+                    "importance_mean": round(float(mean_abs[i]), 6),
+                }
                 for i in sorted_idx
             ],
         }

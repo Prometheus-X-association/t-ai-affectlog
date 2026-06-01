@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+
 from affectlog.models.dummy_adapter import DummyAdapter
 
 
@@ -37,14 +38,16 @@ def test_dummy_is_classifier():
 def test_sklearn_adapter_from_fixture(tmp_path):
     """Create a tiny sklearn model, save it, load via SklearnAdapter."""
     try:
-        from sklearn.linear_model import LogisticRegression
         import joblib
+        from sklearn.linear_model import LogisticRegression
+
         X = np.array([[1, 0], [0, 1], [1, 1], [0, 0]])
         y = np.array([1, 0, 1, 0])
         model = LogisticRegression(max_iter=200).fit(X, y)
         model_path = tmp_path / "lr.joblib"
         joblib.dump(model, model_path)
         from affectlog.models.sklearn_adapter import SklearnAdapter
+
         adapter = SklearnAdapter.from_file(model_path)
         preds = adapter.predict(X)
         assert len(preds) == 4

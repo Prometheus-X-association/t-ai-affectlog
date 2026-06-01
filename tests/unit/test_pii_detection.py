@@ -1,6 +1,5 @@
 """Tests: PII detection."""
 
-import pytest
 from affectlog.privacy.pii_detector import is_pii_field, scan_field_names, scan_sample_values
 
 

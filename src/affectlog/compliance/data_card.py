@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from affectlog.core.time import now_iso
 
@@ -13,8 +13,8 @@ def build_data_card(
     dataset_name: str,
     schema_fields: list[str],
     row_count: int,
-    privacy_report: Optional[dict[str, Any]] = None,
-    descriptive_stats: Optional[dict[str, Any]] = None,
+    privacy_report: dict[str, Any] | None = None,
+    descriptive_stats: dict[str, Any] | None = None,
     recipe_name: str = "unknown",
     run_id: str = "unknown",
 ) -> dict[str, Any]:
@@ -36,7 +36,9 @@ def build_data_card(
                 descriptive_stats.get("min_timestamp", "unknown")
                 + " to "
                 + descriptive_stats.get("max_timestamp", "unknown")
-            ) if descriptive_stats else "unknown",
+            )
+            if descriptive_stats
+            else "unknown",
             "annotation": "xAPI-normalized educational interaction traces",
         },
         "provenance": {
@@ -47,10 +49,16 @@ def build_data_card(
         "privacy": {
             "contains_pii": True,
             "pseudonymised": True,
-            "allow_raw_identifiers": privacy_report.get("allow_raw_identifiers", False) if privacy_report else False,
+            "allow_raw_identifiers": privacy_report.get("allow_raw_identifiers", False)
+            if privacy_report
+            else False,
             "pseudonymisation_method": "HMAC-SHA256",
-            "fields_pseudonymised": privacy_report.get("fields_pseudonymised", []) if privacy_report else [],
-            "residual_risk": privacy_report.get("risk_summary", {}).get("level", "unknown") if privacy_report else "unknown",
+            "fields_pseudonymised": privacy_report.get("fields_pseudonymised", [])
+            if privacy_report
+            else [],
+            "residual_risk": privacy_report.get("risk_summary", {}).get("level", "unknown")
+            if privacy_report
+            else "unknown",
         },
         "known_biases": [
             "Long-tail resource distribution — a few resources dominate activity.",

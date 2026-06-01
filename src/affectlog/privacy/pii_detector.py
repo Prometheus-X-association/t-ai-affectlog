@@ -51,12 +51,14 @@ def scan_sample_values(record: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         for pii_type, pattern in PII_VALUE_PATTERNS:
             if pattern.search(value):
-                findings.append({
-                    "field": field,
-                    "type": pii_type,
-                    "source": "value_pattern",
-                    "sample_value": value[:20] + "…" if len(value) > 20 else value,
-                })
+                findings.append(
+                    {
+                        "field": field,
+                        "type": pii_type,
+                        "source": "value_pattern",
+                        "sample_value": value[:20] + "…" if len(value) > 20 else value,
+                    }
+                )
     return findings
 
 

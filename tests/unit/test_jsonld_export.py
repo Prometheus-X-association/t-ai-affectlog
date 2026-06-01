@@ -1,7 +1,7 @@
 """Tests: JSON-LD compliance graph export."""
 
 import json
-import pytest
+
 from affectlog.compliance.jsonld import build_compliance_graph, export_jsonld
 
 
