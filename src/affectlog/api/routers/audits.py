@@ -95,3 +95,44 @@ async def get_compliance_graph(run_id: str) -> dict[str, Any]:
     if not jld_path.exists():
         raise HTTPException(status_code=404, detail="compliance_graph.jsonld not found.")
     return json.loads(jld_path.read_text())
+
+
+@router.get("/{run_id}/dashboard", summary="Get dashboard payload for this run")
+async def get_dashboard(run_id: str) -> dict[str, Any]:
+    settings = get_settings()
+    dash_path = Path(settings.runs_dir) / run_id / "dashboard_payload.json"
+    if not dash_path.exists():
+        raise HTTPException(status_code=404, detail="dashboard_payload.json not found for this run.")
+    return json.loads(dash_path.read_text())
+
+
+@router.get("", summary="List all audit runs")
+async def list_runs() -> dict[str, Any]:
+    settings = get_settings()
+    runs_dir = Path(settings.runs_dir)
+    if not runs_dir.exists():
+        return {"runs": []}
+    runs = []
+    for run_dir in sorted(runs_dir.iterdir(), reverse=True):
+        if not run_dir.is_dir():
+            continue
+        manifest = run_dir / "manifest.json"
+        entry: dict[str, Any] = {"run_id": run_dir.name}
+        if manifest.exists():
+            try:
+                m = json.loads(manifest.read_text())
+                entry.update({
+                    "recipe": m.get("recipe_name", ""),
+                    "status": "completed",
+                    "artifacts": list(m.get("artifacts", {}).keys()),
+                })
+            except Exception:
+                entry["status"] = "unknown"
+        else:
+            # Check in-memory state
+            if run_dir.name in _run_status:
+                entry.update(_run_status[run_dir.name])
+            else:
+                entry["status"] = "completed"
+        runs.append(entry)
+    return {"runs": runs}

@@ -25,6 +25,29 @@ router = APIRouter(prefix="/v1/datasets", tags=["Datasets"])
 _dataset_registry: dict[str, dict[str, Any]] = {}
 
 
+@router.get("/available", summary="List available data files (samples + raw)")
+async def list_available() -> dict[str, Any]:
+    settings = get_settings()
+    files: list[dict[str, Any]] = []
+    for subdir, label in [
+        (settings.samples_dir, "samples"),
+        (settings.raw_dir, "raw"),
+        (settings.processed_dir, "processed"),
+    ]:
+        if not subdir.exists():
+            continue
+        for f in sorted(subdir.rglob("*")):
+            if f.is_file() and f.suffix.lower() in {".csv", ".jsonl", ".json"} and f.name != ".gitkeep":
+                files.append({
+                    "path": str(f),
+                    "name": f.name,
+                    "size_bytes": f.stat().st_size,
+                    "location": label,
+                    "format": f.suffix.lstrip("."),
+                })
+    return {"files": files}
+
+
 @router.post("/validate", response_model=DatasetValidateResponse, summary="Validate CSV schema")
 async def validate_dataset(
     req: DatasetValidateRequest,

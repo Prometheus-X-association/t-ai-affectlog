@@ -1,4 +1,4 @@
-.PHONY: install test test-slow lint typecheck security docs api frontend docker-up demo synthetic-1m benchmark clean
+.PHONY: install test test-slow lint typecheck security docs api frontend docker-up demo synthetic-1m benchmark clean dev
 
 PYTHON := python3
 UV := uv
@@ -6,6 +6,9 @@ PIP := pip
 
 install:
 	$(UV) pip install -e ".[dev]" || $(PIP) install -e ".[dev]"
+
+dev:
+	bash scripts/dev.sh
 
 test:
 	pytest -m "not slow" --cov=src/affectlog --cov-report=term-missing

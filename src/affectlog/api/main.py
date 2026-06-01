@@ -23,6 +23,7 @@ from affectlog.api.routers import (
     health,
     models,
     pdc,
+    recipes,
     transforms,
 )
 from affectlog.config import get_settings
@@ -86,6 +87,7 @@ app.include_router(health.router)
 app.include_router(datasets.router)
 app.include_router(transforms.router)
 app.include_router(audits.router)
+app.include_router(recipes.router)
 app.include_router(models.router)
 app.include_router(explanations.router)
 app.include_router(compliance.router)

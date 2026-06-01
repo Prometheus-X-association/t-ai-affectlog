@@ -1,36 +1,85 @@
-:root {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { font-family: "Inter", system-ui, sans-serif; }
+  body { @apply bg-slate-950 text-slate-200 m-0; }
+  code, pre { font-family: "JetBrains Mono", "Fira Code", monospace; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-slate-900; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-600 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-500; }
 }
 
-body { margin: 0; }
-
-a { color: #6366f1; text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-.card {
-  background: #1e293b;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  border: 1px solid #334155;
+@layer components {
+  .card {
+    @apply bg-slate-800 border border-slate-700 rounded-xl p-5;
+  }
+  .card-sm {
+    @apply bg-slate-800 border border-slate-700 rounded-lg p-4;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500
+           text-white font-medium px-4 py-2 rounded-lg transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600
+           text-slate-200 font-medium px-4 py-2 rounded-lg transition-colors
+           disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 hover:bg-slate-700
+           text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-lg transition-colors text-sm;
+  }
+  .input {
+    @apply w-full bg-slate-900 border border-slate-700 text-slate-200
+           placeholder-slate-500 rounded-lg px-3 py-2 text-sm
+           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+  }
+  .select {
+    @apply bg-slate-900 border border-slate-700 text-slate-200
+           rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2
+           focus:ring-indigo-500 focus:border-transparent;
+  }
+  .badge-ok {
+    @apply inline-flex items-center gap-1 bg-emerald-900/60 text-emerald-400
+           border border-emerald-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+  .badge-warn {
+    @apply inline-flex items-center gap-1 bg-amber-900/60 text-amber-400
+           border border-amber-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+  .badge-err {
+    @apply inline-flex items-center gap-1 bg-red-900/60 text-red-400
+           border border-red-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+  .badge-info {
+    @apply inline-flex items-center gap-1 bg-indigo-900/60 text-indigo-400
+           border border-indigo-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+           text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 transition-all;
+  }
+  .nav-link.active {
+    @apply bg-indigo-600/20 text-indigo-400 border border-indigo-500/30;
+  }
+  .metric-big {
+    @apply text-3xl font-bold text-white;
+  }
+  .section-title {
+    @apply text-lg font-semibold text-slate-100 mb-4;
+  }
+  .stat-label {
+    @apply text-xs text-slate-500 uppercase tracking-wider font-medium;
+  }
+  .gini-bar-bg {
+    @apply h-3 bg-slate-700 rounded-full overflow-hidden;
+  }
+  .gini-bar-fill {
+    @apply h-full rounded-full transition-all duration-700;
+  }
 }
-
-.metric-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #818cf8;
-}
-
-.badge-ok { background: #065f46; color: #6ee7b7; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; }
-.badge-warn { background: #78350f; color: #fcd34d; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; }
-.badge-err { background: #7f1d1d; color: #fca5a5; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; }
-
-.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-nav { display: flex; gap: 1rem; padding: 1rem 2rem; background: #1e293b; border-bottom: 1px solid #334155; }
-nav a { color: #94a3b8; font-weight: 500; }
-nav a.active { color: #818cf8; }
-
-h1, h2, h3 { color: #f1f5f9; }
