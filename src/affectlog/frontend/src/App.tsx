@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate, useNavigate, Link } fr
 import {
   LayoutDashboard, Database, FlaskConical, ShieldCheck, Cpu,
   Users, ClipboardList, Shield, Mail, Activity, Settings,
-  Menu, X, ExternalLink, LogOut,
+  Menu, X, ExternalLink, LogOut, Wand2,
 } from "lucide-react";
 import clsx from "clsx";
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
@@ -27,6 +27,7 @@ const ResetPassword = lazy(() => import("./pages/public/ResetPassword"));
 
 // App pages (existing)
 const AppHome = lazy(() => import("./pages/Home"));
+const AnalysisWizard = lazy(() => import("./pages/app/AnalysisWizard"));
 const Datasets = lazy(() => import("./pages/Datasets"));
 const Audit = lazy(() => import("./pages/Audit"));
 const Models = lazy(() => import("./pages/Models"));
@@ -47,6 +48,7 @@ const Spinner = () => (
 // ── App layout sidebar nav ──────────────────────────────────────────────────
 const APP_NAV = [
   { to: "/app", label: "Overview", icon: LayoutDashboard, end: true },
+  { to: "/app/wizard", label: "Guided Assessment", icon: Wand2 },
   { to: "/app/datasets", label: "Datasets", icon: Database },
   { to: "/app/audit", label: "Audit", icon: FlaskConical },
   { to: "/app/compliance", label: "Compliance", icon: ShieldCheck },
@@ -198,6 +200,7 @@ export default function App() {
 
             {/* Authenticated app routes */}
             <Route path="/app" element={<RequireAuth><AppShell nav={APP_NAV}><AppHome /></AppShell></RequireAuth>} />
+            <Route path="/app/wizard/*" element={<RequireAuth><AppShell nav={APP_NAV}><AnalysisWizard /></AppShell></RequireAuth>} />
             <Route path="/app/datasets" element={<RequireAuth><AppShell nav={APP_NAV}><Datasets /></AppShell></RequireAuth>} />
             <Route path="/app/audit" element={<RequireAuth><AppShell nav={APP_NAV}><Audit /></AppShell></RequireAuth>} />
             <Route path="/app/compliance" element={<RequireAuth><AppShell nav={APP_NAV}><Compliance /></AppShell></RequireAuth>} />

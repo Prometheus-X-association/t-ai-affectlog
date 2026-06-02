@@ -132,6 +132,28 @@ curl http://localhost:8000/healthz
 
 ---
 
+## Guided Assessment Wizard
+
+The **Guided Assessment Wizard** (`/app/wizard`) is the primary workflow for client-facing assessments. It guides you through a complete, audit-ready analysis while preventing invalid, unsupported, or misleading operations.
+
+**How to use the wizard:**
+
+1. **Start with the wizard** — navigate to _Guided Assessment_ in the sidebar (above Datasets/Audits/Models)
+2. **Upload or select a dataset** — CSV, JSON, JSONL, or Parquet; optionally add a model, prediction file, or ground truth
+3. **Confirm format and mapping** — AffectLog detects your format automatically (Maskott CSV is fully pre-mapped)
+4. **Review privacy controls** — confirm pseudonymisation and privacy settings before analysis
+5. **Attach a model** (if available) — unlock explanation, model card, and performance analyses
+6. **Select valid analyses** — the scope matrix shows what is available, conditional, and out of scope
+7. **Review the output contract** — see exactly what will be produced and confirm the limitations
+8. **Run the assessment** — monitor real-time pipeline progress
+9. **Download artifacts** — metrics.json, SOP.md, compliance_graph.jsonld, data_card.json, and more
+
+The wizard is backed by production APIs. It never shows generic charts or analyses not implemented in the backend.
+
+See [docs/guided-analysis-wizard.md](docs/guided-analysis-wizard.md) for the full reference.
+
+---
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)
@@ -141,6 +163,13 @@ curl http://localhost:8000/healthz
 - [Model Adapters](docs/model-adapters.md)
 - [Compliance Mapping](docs/compliance-mapping.md)
 - [Privacy & Security](docs/privacy-and-security.md)
+- **Wizard**
+  - [Guided Assessment Wizard](docs/guided-analysis-wizard.md)
+  - [Capability Registry](docs/capability-registry.md)
+  - [Analysis Scope & Guardrails](docs/analysis-scope-and-guardrails.md)
+  - [Plot Catalog](docs/plot-catalog.md)
+  - [Error Handling](docs/error-handling.md)
+  - [Client Input Guide](docs/client-input-guide.md)
 
 ---
 

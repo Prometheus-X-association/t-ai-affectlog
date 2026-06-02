@@ -33,6 +33,8 @@ from affectlog.api.routers import (
     recipes,
     transforms,
 )
+from affectlog.api.routers.capabilities import router as capabilities_router
+from affectlog.api.routers.wizard import router as wizard_router
 from affectlog.api.routers.admin import router as admin_router
 from affectlog.api.routers.auth import router as auth_router
 from affectlog.api.routers.editions import router as editions_router
@@ -152,3 +154,5 @@ app.include_router(pdc.router)
 app.include_router(interoperability_router)
 app.include_router(editions_router)
 app.include_router(platform_admin_router)
+app.include_router(capabilities_router)
+app.include_router(wizard_router)
