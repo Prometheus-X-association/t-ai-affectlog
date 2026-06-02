@@ -5,15 +5,14 @@ Uses in-memory SQLite for speed.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
 
 import pytest
 import pytest_asyncio
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from affectlog.db.base import Base
 from affectlog.db.models import PendingRegistration, User
-from sqlalchemy import select
 
 
 @pytest_asyncio.fixture
@@ -53,8 +52,9 @@ async def test_create_pending_registration_no_active_user(db: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_duplicate_registration_raises(db: AsyncSession):
-    from affectlog.auth.registration import create_pending_registration
     from fastapi import HTTPException
+
+    from affectlog.auth.registration import create_pending_registration
 
     for _ in range(2):
         try:

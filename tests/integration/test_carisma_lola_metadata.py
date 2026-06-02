@@ -2,7 +2,6 @@
 Tests for CARiSMA and LOLA interoperability metadata exchange.
 Validates schemas, export construction, and import parsing.
 """
-import pytest
 from affectlog.interoperability.carisma import (
     CARISMA_EXCHANGE_SCHEMA,
     CARISMA_SCHEMA_VERSION,
@@ -16,7 +15,6 @@ from affectlog.interoperability.lola import (
     build_lola_export,
     parse_lola_results,
 )
-
 
 SAMPLE_AUDIT = {
     "run_id": "run-test-001",

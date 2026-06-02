@@ -5,10 +5,10 @@ All routes require admin permissions.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -22,7 +22,7 @@ from affectlog.auth.onboarding import (
 )
 from affectlog.auth.permissions import P
 from affectlog.config import get_settings
-from affectlog.core.email import send_registration_approved, send_registration_rejected
+from affectlog.core.email import send_email, send_registration_approved, send_registration_rejected
 from affectlog.db.models import (
     AuditLogEntry,
     PendingRegistration,
@@ -42,7 +42,6 @@ from affectlog.schemas.users import (
     RequestMoreInfoRequest,
     WorkspaceOut,
 )
-from affectlog.core.email import send_email
 from affectlog.version import __version__
 
 logger = logging.getLogger(__name__)
@@ -58,8 +57,8 @@ _require_system = require_permission(P.SYSTEM_READ)
 
 @router.get("/pending-registrations", response_model=list[PendingRegistrationOut])
 async def list_pending_registrations(
-    status_filter: Optional[str] = Query("pending"),
-    actor=Depends(_require_approve),
+    status_filter: str | None = Query("pending"),
+    _actor=Depends(_require_approve),
     db: AsyncSession = Depends(get_db),
 ) -> list[PendingRegistration]:
     q = select(PendingRegistration).order_by(PendingRegistration.created_at.desc())
@@ -124,7 +123,7 @@ async def reject(
 async def request_more_info(
     reg_id: UUID,
     body: RequestMoreInfoRequest,
-    actor=Depends(_require_approve),
+    _actor=Depends(_require_approve),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, str]:
     reg_result = await db.execute(select(PendingRegistration).where(PendingRegistration.id == reg_id))
@@ -151,7 +150,7 @@ async def request_more_info(
 
 @router.get("/users", response_model=list[AdminUserOut])
 async def list_users(
-    actor=Depends(_require_user_manage),
+    _actor=Depends(_require_user_manage),
     db: AsyncSession = Depends(get_db),
 ) -> list[User]:
     result = await db.execute(
@@ -257,7 +256,7 @@ async def assign_roles(
 async def get_audit_log(
     limit: int = Query(100, le=1000),
     offset: int = Query(0),
-    actor=Depends(_require_audit_logs),
+    _actor=Depends(_require_audit_logs),
     db: AsyncSession = Depends(get_db),
 ) -> list[AuditLogEntry]:
     result = await db.execute(
@@ -273,7 +272,7 @@ async def get_audit_log(
 
 @router.get("/email/templates")
 async def list_email_templates(
-    actor=Depends(_require_system),
+    _actor=Depends(_require_system),
 ) -> list[str]:
     return [
         "registration_received",
@@ -290,7 +289,7 @@ async def list_email_templates(
 async def test_email(
     to: str,
     template: str = "registration_received",
-    actor=Depends(_require_system),
+    _actor=Depends(_require_system),
 ) -> dict[str, str]:
     from affectlog.core.email import send_email
     await send_email(
@@ -304,7 +303,7 @@ async def test_email(
 
 @router.get("/system/health")
 async def system_health(
-    actor=Depends(_require_system),
+    _actor=Depends(_require_system),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, Any]:
     user_count = await db.execute(select(func.count(User.id)))
@@ -323,7 +322,7 @@ async def system_health(
 
 @router.get("/workspaces", response_model=list[WorkspaceOut])
 async def list_workspaces(
-    actor=Depends(_require_user_manage),
+    _actor=Depends(_require_user_manage),
     db: AsyncSession = Depends(get_db),
 ) -> list[Workspace]:
     result = await db.execute(select(Workspace).order_by(Workspace.slug))

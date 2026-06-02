@@ -1,6 +1,6 @@
 """Tests for token generation, hashing, and expiry."""
-import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
 from affectlog.auth.tokens import (
     activation_expiry,
     generate_token,
@@ -33,18 +33,18 @@ def test_hash_matches_generate():
 
 
 def test_is_expired_past():
-    past = datetime.now(timezone.utc) - timedelta(seconds=1)
+    past = datetime.now(UTC) - timedelta(seconds=1)
     assert is_expired(past) is True
 
 
 def test_is_expired_future():
-    future = datetime.now(timezone.utc) + timedelta(hours=1)
+    future = datetime.now(UTC) + timedelta(hours=1)
     assert is_expired(future) is False
 
 
 def test_activation_expiry_in_future():
     expiry = activation_expiry()
-    assert expiry > datetime.now(timezone.utc)
+    assert expiry > datetime.now(UTC)
 
 
 def test_password_reset_expiry_shorter_than_activation():

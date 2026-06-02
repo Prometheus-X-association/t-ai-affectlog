@@ -1,5 +1,6 @@
 """Tests that email templates render without errors."""
 from pathlib import Path
+
 import pytest
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 

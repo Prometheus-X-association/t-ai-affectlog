@@ -1,6 +1,5 @@
 """Tests for RBAC permission constants and role defaults."""
-import pytest
-from affectlog.auth.permissions import ALL_PERMISSIONS, P, ROLE_DEFAULTS
+from affectlog.auth.permissions import ALL_PERMISSIONS, ROLE_DEFAULTS, P
 
 
 def test_all_permissions_have_names_and_descriptions():

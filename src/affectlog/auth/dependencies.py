@@ -8,10 +8,9 @@ Usage:
 """
 from __future__ import annotations
 
-import uuid
-from typing import Callable, Optional
+from collections.abc import Callable
 
-from fastapi import Cookie, Depends, HTTPException, Request, status
+from fastapi import Cookie, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from affectlog.auth.rbac import get_user_permissions
@@ -23,17 +22,16 @@ SESSION_COOKIE = "affectlog_session"
 
 
 async def get_optional_user(
-    request: Request,
     db: AsyncSession = Depends(get_db),
-    session_token: Optional[str] = Cookie(None, alias=SESSION_COOKIE),
-) -> Optional[User]:
+    session_token: str | None = Cookie(None, alias=SESSION_COOKIE),
+) -> User | None:
     if session_token is None:
         return None
     return await get_session_user(db, session_token)
 
 
 async def get_current_user(
-    user: Optional[User] = Depends(get_optional_user),
+    user: User | None = Depends(get_optional_user),
 ) -> User:
     if user is None:
         raise HTTPException(

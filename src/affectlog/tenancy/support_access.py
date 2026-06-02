@@ -16,12 +16,15 @@ Design invariants:
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+if TYPE_CHECKING:
+    from affectlog.tenancy.models import SupportAccessGrant
 
 
 async def create_support_grant(
@@ -34,11 +37,11 @@ async def create_support_grant(
     scope: str,
     expires_at: datetime,
     raw_data_access: bool = False,
-) -> "SupportAccessGrant":  # type: ignore[name-defined]
+) -> SupportAccessGrant:
     from affectlog.tenancy.models import SupportAccessGrant, TenantAuditLog
 
     if expires_at.tzinfo is None:
-        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        expires_at = expires_at.replace(tzinfo=UTC)
 
     grant = SupportAccessGrant(
         tenant_id=tenant_id,
@@ -92,7 +95,7 @@ async def revoke_support_grant(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Grant already revoked.")
 
     grant.status = "revoked"
-    grant.revoked_at = datetime.now(tz=timezone.utc)
+    grant.revoked_at = datetime.now(tz=UTC)
     grant.revoked_by_user_id = revoked_by_user_id
 
     log = TenantAuditLog(
@@ -116,7 +119,7 @@ async def check_support_grant_active(
     """Returns True if the support user has an active, non-expired grant for this tenant."""
     from affectlog.tenancy.models import SupportAccessGrant
 
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
     result = await db.execute(
         select(SupportAccessGrant)
         .where(SupportAccessGrant.tenant_id == tenant_id)

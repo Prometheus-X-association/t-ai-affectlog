@@ -33,12 +33,12 @@ from affectlog.api.routers import (
     recipes,
     transforms,
 )
-from affectlog.api.routers.auth import router as auth_router
 from affectlog.api.routers.admin import router as admin_router
-from affectlog.api.routers.public import router as public_router
-from affectlog.api.routers.interoperability import router as interoperability_router
+from affectlog.api.routers.auth import router as auth_router
 from affectlog.api.routers.editions import router as editions_router
+from affectlog.api.routers.interoperability import router as interoperability_router
 from affectlog.api.routers.platform_admin import router as platform_admin_router
+from affectlog.api.routers.public import router as public_router
 from affectlog.auth.rate_limit import limiter
 from affectlog.config import get_settings
 from affectlog.logging import configure_logging
@@ -127,7 +127,7 @@ async def request_id_middleware(request: Request, call_next: Any) -> Any:
 
 # ── Error handlers ────────────────────────────────────────────────────────
 @app.exception_handler(Exception)
-async def generic_error_handler(request: Request, exc: Exception) -> JSONResponse:
+async def generic_error_handler(_request: Request, exc: Exception) -> JSONResponse:
     log = logging.getLogger(__name__)
     log.exception("Unhandled error: %s", exc)
     return JSONResponse(

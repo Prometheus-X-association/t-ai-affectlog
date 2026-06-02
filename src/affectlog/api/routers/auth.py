@@ -4,20 +4,20 @@ Auth API routes — login, logout, me, change-password, MFA scaffold.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from fastapi import APIRouter, Cookie, Depends, HTTPException, Request, Response, status
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from affectlog.auth.audit_log import log_event
-from affectlog.auth.dependencies import SESSION_COOKIE, get_current_user, get_optional_user
+from affectlog.auth.dependencies import SESSION_COOKIE, get_current_user
 from affectlog.auth.password import hash_password, needs_rehash, verify_password
 from affectlog.auth.rbac import get_user_permissions, get_user_role_names
-from affectlog.auth.sessions import create_session, get_session_user, revoke_session
+from affectlog.auth.sessions import create_session, revoke_session
 from affectlog.config import get_settings
-from affectlog.db.models import User, WorkspaceMembership, Workspace
+from affectlog.db.models import User, Workspace, WorkspaceMembership
 from affectlog.db.session import get_db
 from affectlog.schemas.auth import (
     ChangePasswordRequest,
@@ -48,7 +48,7 @@ async def login(
             user.failed_login_count += 1
             if user.failed_login_count >= settings.max_failed_logins:
                 from datetime import timedelta
-                user.locked_until = datetime.now(timezone.utc) + timedelta(
+                user.locked_until = datetime.now(UTC) + timedelta(
                     seconds=settings.lockout_seconds
                 )
             await db.flush()
@@ -70,7 +70,7 @@ async def login(
     if not user.is_active:
         await fail("Account is not active.")
 
-    if user.locked_until and user.locked_until > datetime.now(timezone.utc):
+    if user.locked_until and user.locked_until > datetime.now(UTC):
         await fail("Account temporarily locked. Try again later.")
 
     if not verify_password(body.password, user.hashed_password):
@@ -81,7 +81,7 @@ async def login(
 
     user.failed_login_count = 0
     user.locked_until = None
-    user.last_login_at = datetime.now(timezone.utc)
+    user.last_login_at = datetime.now(UTC)
     token = await create_session(db, user, ip_address=ip, user_agent=request.headers.get("user-agent"))
     await db.flush()
 
@@ -112,7 +112,7 @@ async def login(
 async def logout(
     response: Response,
     db: AsyncSession = Depends(get_db),
-    session_token: Optional[str] = Cookie(None, alias=SESSION_COOKIE),
+    session_token: str | None = Cookie(None, alias=SESSION_COOKIE),
 ) -> dict[str, str]:
     if session_token:
         await revoke_session(db, session_token)
