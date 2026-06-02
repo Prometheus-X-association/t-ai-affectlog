@@ -56,7 +56,7 @@ export default function SelfHost() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                  href="https://github.com/roy-saurabh/edge_affectlog"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-white rounded-xl px-6 py-3 border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] transition-all"
@@ -106,7 +106,7 @@ export default function SelfHost() {
               {
                 step: 1, title: "Clone and configure",
                 code: [
-                  { c: "#22d3ee", t: "git clone https://github.com/Prometheus-X-association/t-ai-affectlog" },
+                  { c: "#22d3ee", t: "git clone https://github.com/roy-saurabh/edge_affectlog" },
                   { c: "#22d3ee", t: "cd t-ai-affectlog" },
                   { c: "#94a3b8", t: "cp .env.example .env" },
                   { c: "#64748b", t: "# Edit .env: set SECRET_KEY, SMTP settings, ALLOWED_ORIGINS" },
@@ -197,7 +197,7 @@ export default function SelfHost() {
               <p className="text-sm text-slate-500 mt-4">
                 Review{" "}
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/SECURITY.md"
+                  href="https://github.com/roy-saurabh/edge_affectlog/blob/main/SECURITY.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cyan-400 hover:text-cyan-300 transition-colors"

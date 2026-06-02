@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from affectlog.db.models import Role, RolePermission, User, UserRole
+from affectlog.db.models import Role, RolePermission, UserRole
 
 if TYPE_CHECKING:
     pass

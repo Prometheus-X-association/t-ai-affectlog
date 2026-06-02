@@ -9,8 +9,8 @@ const COLS = [
       { label: "Overview",          to: "/community" },
       { label: "Self-host Guide",   to: "/self-host" },
       { label: "Docker Compose",    to: "/self-host#docker" },
-      { label: "Contributor Guide", href: "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md" },
-      { label: "GitHub",            href: "https://github.com/Prometheus-X-association/t-ai-affectlog" },
+      { label: "Contributor Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md" },
+      { label: "GitHub",            href: "https://github.com/roy-saurabh/edge_affectlog" },
     ],
   },
   {
@@ -29,7 +29,7 @@ const COLS = [
       { label: "Developer Hub",         to: "/developers" },
       { label: "API Reference",         href: "/api/docs" },
       { label: "OpenAPI Spec",          href: "/api/openapi.json" },
-      { label: "Add a Recipe",          href: "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md" },
+      { label: "Add a Recipe",          href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md" },
       { label: "Model Adapters",        to: "/docs#adapters" },
     ],
   },
@@ -56,10 +56,10 @@ const COLS = [
   {
     title: "Legal & Security",
     links: [
-      { label: "License (MIT)",         href: "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/LICENSE" },
-      { label: "Security Policy",       href: "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/SECURITY.md" },
+      { label: "License (MIT)",         href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/LICENSE" },
+      { label: "Security Policy",       href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/SECURITY.md" },
       { label: "Edition Boundaries",    to: "/docs#editions" },
-      { label: "CITATION.cff",          href: "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CITATION.cff" },
+      { label: "CITATION.cff",          href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/CITATION.cff" },
       { label: "Responsible Disclosure",to: "/security" },
     ],
   },
@@ -105,7 +105,7 @@ export function PublicFooter() {
               Open-source and managed Trustworthy AI assessment for education and skills data spaces.
             </p>
             <a
-              href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+              href="https://github.com/roy-saurabh/edge_affectlog"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 mt-3 text-sm text-slate-500 hover:text-slate-300 transition-colors"
@@ -172,7 +172,7 @@ export function PublicFooter() {
           <p>
             AffectLog Community Edition is released under the{" "}
             <a
-              href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/LICENSE"
+              href="https://github.com/roy-saurabh/edge_affectlog/blob/main/LICENSE"
               target="_blank"
               rel="noopener noreferrer"
               className="text-slate-500 hover:text-slate-400 underline"

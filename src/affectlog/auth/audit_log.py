@@ -4,8 +4,7 @@ Security audit logging — write immutable audit trail entries to DB.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,12 +15,12 @@ async def log_event(
     db: AsyncSession,
     action: str,
     *,
-    actor_id: Optional[uuid.UUID] = None,
-    actor_email: Optional[str] = None,
-    resource_type: Optional[str] = None,
-    resource_id: Optional[str] = None,
-    detail: Optional[str] = None,
-    ip_address: Optional[str] = None,
+    actor_id: uuid.UUID | None = None,
+    actor_email: str | None = None,
+    resource_type: str | None = None,
+    resource_id: str | None = None,
+    detail: str | None = None,
+    ip_address: str | None = None,
     success: bool = True,
 ) -> None:
     entry = AuditLogEntry(
@@ -33,7 +32,7 @@ async def log_event(
         detail=detail,
         ip_address=ip_address,
         success=success,
-        logged_at=datetime.now(timezone.utc),
+        logged_at=datetime.now(UTC),
     )
     db.add(entry)
     await db.flush()

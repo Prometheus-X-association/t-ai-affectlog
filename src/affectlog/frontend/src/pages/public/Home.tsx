@@ -497,7 +497,7 @@ function CommunitySection() {
             >
               {[
                 { c: "#64748b", t: "# Clone and run locally" },
-                { c: "#22d3ee", t: "git clone https://github.com/Prometheus-X-association/t-ai-affectlog" },
+                { c: "#22d3ee", t: "git clone https://github.com/roy-saurabh/edge_affectlog" },
                 { c: "#34d399", t: "docker compose up" },
                 { c: "#a78bfa", t: "make seed && make create-admin" },
                 { c: "#22d3ee", t: "make synthetic-1m  # generate 1M-row test dataset" },
@@ -509,7 +509,7 @@ function CommunitySection() {
 
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                href="https://github.com/roy-saurabh/edge_affectlog"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium text-white px-5 py-2.5 rounded-xl border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] transition-all"
@@ -754,7 +754,7 @@ function DeveloperSection() {
             return (
               <FadeUp key={c.label} delay={i * 0.04}>
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-xl p-4 border border-white/[0.06] hover:border-cyan-400/20 hover:bg-cyan-400/[0.04] transition-all group"
@@ -772,7 +772,7 @@ function DeveloperSection() {
         <FadeUp delay={0.3}>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+              href="https://github.com/roy-saurabh/edge_affectlog"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-semibold text-white px-6 py-3 rounded-xl border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] transition-all"
@@ -832,7 +832,7 @@ function FinalCTA() {
               Request managed access <ArrowRight size={16} />
             </Link>
             <a
-              href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+              href="https://github.com/roy-saurabh/edge_affectlog"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-slate-400 hover:text-white px-5 py-3 rounded-xl hover:bg-white/[0.04] transition-all"

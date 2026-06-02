@@ -67,7 +67,7 @@ export function PublicHeader() {
           {/* CTAs */}
           <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
             <a
-              href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+              href="https://github.com/roy-saurabh/edge_affectlog"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 transition-colors"

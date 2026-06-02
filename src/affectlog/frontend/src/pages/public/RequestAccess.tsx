@@ -115,7 +115,7 @@ export default function RequestAccess() {
                     Community Edition is available immediately on GitHub. No approval required.
                   </p>
                   <a
-                    href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                    href="https://github.com/roy-saurabh/edge_affectlog"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors inline-flex items-center gap-1"

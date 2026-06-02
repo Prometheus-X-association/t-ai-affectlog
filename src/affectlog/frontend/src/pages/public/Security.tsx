@@ -130,7 +130,7 @@ export default function Security() {
                     vulnerabilities. We aim to acknowledge reports within 48 hours.
                   </p>
                   <a
-                    href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/SECURITY.md"
+                    href="https://github.com/roy-saurabh/edge_affectlog/blob/main/SECURITY.md"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"

@@ -21,7 +21,6 @@ Usage:
 from __future__ import annotations
 
 import uuid
-from typing import Optional
 
 from fastapi import Depends, HTTPException, status
 from sqlalchemy import select
@@ -35,7 +34,7 @@ from affectlog.editions.base import get_tenant_mode
 async def get_tenant_id(
     current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> Optional[uuid.UUID]:
+) -> uuid.UUID | None:
     """
     Resolve the tenant context for the authenticated user.
     Returns None in single-tenant / community mode.
@@ -62,7 +61,7 @@ async def get_tenant_id(
 
 
 async def require_tenant(
-    tenant_id: Optional[uuid.UUID] = Depends(get_tenant_id),
+    tenant_id: uuid.UUID | None = Depends(get_tenant_id),
 ) -> uuid.UUID:
     """Dependency that requires a tenant context. Raises 403 if none resolved."""
     if tenant_id is None:

@@ -10,7 +10,6 @@ import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
-from typing import Optional
 
 import aiosmtplib
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 _TEMPLATES_DIR = Path(__file__).parent.parent / "templates" / "email"
 
-_jinja_env: Optional[Environment] = None
+_jinja_env: Environment | None = None
 
 
 def _get_env() -> Environment:
@@ -121,7 +120,7 @@ async def send_registration_approved(
     )
 
 
-async def send_registration_rejected(to: str, full_name: str, reason: Optional[str]) -> bool:
+async def send_registration_rejected(to: str, full_name: str, reason: str | None) -> bool:
     settings = get_settings()
     return await send_email(
         to=to,

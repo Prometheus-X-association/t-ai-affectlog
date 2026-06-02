@@ -21,7 +21,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from affectlog.auth.permissions import ALL_PERMISSIONS, ROLE_DEFAULTS
 from affectlog.db.base import Base
 from affectlog.db.models import Permission, Role, RolePermission, Workspace
-from affectlog.db.session import engine, AsyncSessionLocal
+from affectlog.db.session import AsyncSessionLocal, engine
 
 
 async def seed(db: AsyncSession) -> None:

@@ -5,9 +5,11 @@ No authentication required.
 from __future__ import annotations
 
 import logging
+from datetime import UTC, datetime
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from affectlog.auth.onboarding import activate_account
@@ -15,9 +17,8 @@ from affectlog.auth.registration import create_pending_registration
 from affectlog.auth.tokens import generate_token, hash_token, is_expired, password_reset_expiry
 from affectlog.config import get_settings
 from affectlog.core.email import (
-    send_admin_new_registration,
-    send_registration_received,
     send_password_reset,
+    send_registration_received,
 )
 from affectlog.db.models import PasswordResetToken, User
 from affectlog.db.session import get_db
@@ -27,9 +28,6 @@ from affectlog.schemas.auth import (
     PasswordResetRequestIn,
     RegisterRequest,
 )
-
-from sqlalchemy import select, update
-from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/public", tags=["public"])
@@ -135,6 +133,6 @@ async def password_reset_confirm(
     from affectlog.auth.password import hash_password
     user.hashed_password = hash_password(body.new_password)
     user.must_change_password = False
-    token.used_at = datetime.now(timezone.utc)
+    token.used_at = datetime.now(UTC)
     await db.flush()
     return {"status": "ok", "message": "Password updated. You can now log in."}

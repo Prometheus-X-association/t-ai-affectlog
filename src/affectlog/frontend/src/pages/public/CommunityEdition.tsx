@@ -91,7 +91,7 @@ export default function CommunityEdition() {
                   Deploy Community Edition <ArrowRight size={16} />
                 </Link>
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                  href="https://github.com/roy-saurabh/edge_affectlog"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-slate-200 rounded-xl px-6 py-3 border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.04] transition-all"
@@ -135,7 +135,7 @@ export default function CommunityEdition() {
                 style={{ background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.07)" }}
               >
                 <div className="text-slate-600 mb-3"># 1. Clone the repository</div>
-                <div className="text-cyan-400 mb-2">git clone https://github.com/Prometheus-X-association/t-ai-affectlog</div>
+                <div className="text-cyan-400 mb-2">git clone https://github.com/roy-saurabh/edge_affectlog</div>
                 <div className="text-cyan-400 mb-4">cd t-ai-affectlog</div>
                 <div className="text-slate-600 mb-3"># 2. Configure environment</div>
                 <div className="text-slate-300 mb-4">cp .env.example .env  <span className="text-slate-600"># edit SMTP, secret key</span></div>
@@ -180,7 +180,7 @@ export default function CommunityEdition() {
                 return (
                   <FadeUp key={c.label} delay={i * 0.04}>
                     <a
-                      href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md"
+                      href="https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block rounded-xl p-4 border border-white/[0.06] hover:border-cyan-400/20 hover:bg-cyan-400/[0.03] transition-all"
@@ -197,7 +197,7 @@ export default function CommunityEdition() {
             <FadeUp delay={0.3}>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                  href="https://github.com/roy-saurabh/edge_affectlog"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-white px-6 py-3 rounded-xl border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] transition-all"
@@ -205,7 +205,7 @@ export default function CommunityEdition() {
                   <Github size={16} /> Open GitHub
                 </a>
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-slate-400 hover:text-white px-6 py-3 rounded-xl hover:bg-white/[0.04] transition-all"

@@ -9,14 +9,14 @@ No authentication required.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from affectlog.db.session import get_db
-from affectlog.editions.base import get_deployment_mode, get_tenant_mode, get_edition_defaults
+from affectlog.editions.base import get_deployment_mode, get_edition_defaults, get_tenant_mode
 from affectlog.editions.features import Feature
 
 logger = logging.getLogger(__name__)
@@ -30,10 +30,10 @@ class ManagedAccessRequestIn(BaseModel):
     country: str
     sector: str
     intended_use: str
-    expected_volume: Optional[str] = None
+    expected_volume: str | None = None
     deployment_pref: str = "managed_cloud"
-    compliance_needs: Optional[str] = None
-    message: Optional[str] = None
+    compliance_needs: str | None = None
+    message: str | None = None
     consent: bool
 
 
@@ -56,7 +56,7 @@ async def editions_info() -> dict[str, Any]:
             "enterprise_sso":  defaults.get(Feature.ENTERPRISE_SSO, False),
         },
         "links": {
-            "community_edition": "https://github.com/Prometheus-X-association/t-ai-affectlog",
+            "community_edition": "https://github.com/roy-saurabh/edge_affectlog",
             "managed_edition":   "/cloud",
             "request_access":    "/request-access",
             "prometheus_x":      "https://prometheus-x.org/bb04-trustworthy-ai-assessment/",
@@ -83,7 +83,7 @@ async def cloud_info() -> dict[str, Any]:
             "Optional private tenant deployment",
         ],
         "contact": "/request-access",
-        "open_source_core": "https://github.com/Prometheus-X-association/t-ai-affectlog",
+        "open_source_core": "https://github.com/roy-saurabh/edge_affectlog",
     }
 
 

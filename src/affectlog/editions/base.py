@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from typing import Literal
 
-from affectlog.editions.features import Feature, COMMUNITY_DEFAULTS, MANAGED_DEFAULTS
+from affectlog.editions.features import COMMUNITY_DEFAULTS, MANAGED_DEFAULTS
 
 DeploymentMode = Literal["community", "managed", "enterprise_private"]
 TenantMode = Literal["single_tenant", "multi_tenant"]

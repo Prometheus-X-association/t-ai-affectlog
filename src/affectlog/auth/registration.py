@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import logging
 import uuid
-from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,13 +20,13 @@ async def create_pending_registration(
     *,
     full_name: str,
     email: str,
-    organization: Optional[str],
-    role_description: Optional[str],
-    requested_access_profile: Optional[str],
-    reason_for_access: Optional[str],
+    organization: str | None,
+    role_description: str | None,
+    requested_access_profile: str | None,
+    reason_for_access: str | None,
     agreed_to_coc: bool,
     agreed_to_data_governance: bool,
-    ip_address: Optional[str] = None,
+    ip_address: str | None = None,
 ) -> PendingRegistration:
     existing = await db.execute(
         select(PendingRegistration).where(PendingRegistration.email == email)

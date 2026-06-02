@@ -2,24 +2,23 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 
 class PendingRegistrationOut(BaseModel):
     id: UUID
     full_name: str
     email: str
-    organization: Optional[str]
-    role_description: Optional[str]
-    requested_access_profile: Optional[str]
-    reason_for_access: Optional[str]
+    organization: str | None
+    role_description: str | None
+    requested_access_profile: str | None
+    reason_for_access: str | None
     agreed_to_coc: bool
     agreed_to_data_governance: bool
     status: str
-    ip_address: Optional[str]
+    ip_address: str | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -28,12 +27,12 @@ class PendingRegistrationOut(BaseModel):
 class ApproveRegistrationRequest(BaseModel):
     role_name: str = "Viewer"
     workspace_slug: str = "default"
-    access_expires_at: Optional[datetime] = None
-    admin_notes: Optional[str] = None
+    access_expires_at: datetime | None = None
+    admin_notes: str | None = None
 
 
 class RejectRegistrationRequest(BaseModel):
-    admin_notes: Optional[str] = None
+    admin_notes: str | None = None
 
 
 class RequestMoreInfoRequest(BaseModel):
@@ -44,13 +43,13 @@ class AdminUserOut(BaseModel):
     id: UUID
     email: str
     full_name: str
-    organization: Optional[str]
+    organization: str | None
     is_active: bool
     is_superadmin: bool
     must_change_password: bool
     mfa_enabled: bool
     failed_login_count: int
-    last_login_at: Optional[datetime]
+    last_login_at: datetime | None
     created_at: datetime
     roles: list[str] = []
 
@@ -63,12 +62,12 @@ class AssignRolesRequest(BaseModel):
 
 class AuditLogEntryOut(BaseModel):
     id: int
-    actor_email: Optional[str]
+    actor_email: str | None
     action: str
-    resource_type: Optional[str]
-    resource_id: Optional[str]
-    detail: Optional[str]
-    ip_address: Optional[str]
+    resource_type: str | None
+    resource_id: str | None
+    detail: str | None
+    ip_address: str | None
     success: bool
     logged_at: datetime
 
@@ -79,7 +78,7 @@ class WorkspaceOut(BaseModel):
     id: int
     slug: str
     name: str
-    description: Optional[str]
+    description: str | None
     is_public_samples: bool
     is_active: bool
 

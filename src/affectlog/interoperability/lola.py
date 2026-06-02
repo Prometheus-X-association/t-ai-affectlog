@@ -14,6 +14,7 @@ This module:
 """
 from __future__ import annotations
 
+from datetime import UTC
 from typing import Any
 
 LOLA_SCHEMA_VERSION = "1.0"
@@ -35,7 +36,7 @@ SHARED_METRICS_VOCABULARY: dict[str, str] = {
 
 LOLA_EXCHANGE_SCHEMA: dict[str, Any] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://github.com/Prometheus-X-association/t-ai-affectlog/schemas/lola-exchange-v1.json",
+    "$id": "https://github.com/roy-saurabh/edge_affectlog/schemas/lola-exchange-v1.json",
     "title": "AffectLog → LOLA Metadata Exchange",
     "description": (
         "Schema for exporting AffectLog dataset evaluation metrics to LOLA "
@@ -95,7 +96,7 @@ def build_lola_export(
     """
     Build a LOLA-compatible export from AffectLog audit metrics.
     """
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     metrics_raw = audit_artifacts.get("metrics", {})
     coverage = audit_artifacts.get("coverage_metrics", {})
@@ -122,7 +123,7 @@ def build_lola_export(
     return {
         "schemaVersion": LOLA_SCHEMA_VERSION,
         "exportType": "dataset_metrics",
-        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "generatedAt": datetime.now(UTC).isoformat(),
         "sourceSystem": "AffectLog Trustworthy AI Assessment v1.0",
         "auditRunId": audit_artifacts.get("run_id", ""),
         "datasetId": audit_artifacts.get("dataset_id", ""),

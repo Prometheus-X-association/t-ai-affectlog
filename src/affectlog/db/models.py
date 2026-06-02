@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import (
     Boolean,
@@ -32,7 +31,7 @@ class Permission(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     role_permissions: Mapped[list[RolePermission]] = relationship(
         "RolePermission", back_populates="permission", cascade="all, delete-orphan"
@@ -45,7 +44,7 @@ class Role(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(80), unique=True, nullable=False, index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_system: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     role_permissions: Mapped[list[RolePermission]] = relationship(
@@ -77,7 +76,7 @@ class Workspace(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_public_samples: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
@@ -95,19 +94,19 @@ class User(Base):
     )
     email: Mapped[str] = mapped_column(String(254), unique=True, nullable=False, index=True)
     full_name: Mapped[str] = mapped_column(String(200), nullable=False)
-    organization: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    organization: Mapped[str | None] = mapped_column(String(200), nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(512), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_superadmin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     must_change_password: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    mfa_secret: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    mfa_secret: Mapped[str | None] = mapped_column(String(64), nullable=True)
     mfa_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     failed_login_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    locked_until: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    last_login_at: Mapped[Optional[datetime]] = mapped_column(
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_login_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-    activation_sent_at: Mapped[Optional[datetime]] = mapped_column(
+    activation_sent_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
 
@@ -167,30 +166,30 @@ class PendingRegistration(Base):
     )
     full_name: Mapped[str] = mapped_column(String(200), nullable=False)
     email: Mapped[str] = mapped_column(String(254), unique=True, nullable=False, index=True)
-    organization: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    role_description: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    requested_access_profile: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    reason_for_access: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    organization: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    role_description: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    requested_access_profile: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    reason_for_access: Mapped[str | None] = mapped_column(Text, nullable=True)
     agreed_to_coc: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     agreed_to_data_governance: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     status: Mapped[str] = mapped_column(
         String(20), default="pending", nullable=False, index=True
     )  # pending / approved / rejected / more_info_requested
-    admin_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    assigned_workspace_id: Mapped[Optional[int]] = mapped_column(
+    admin_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    assigned_workspace_id: Mapped[int | None] = mapped_column(
         ForeignKey("workspaces.id"), nullable=True
     )
-    assigned_role_id: Mapped[Optional[int]] = mapped_column(
+    assigned_role_id: Mapped[int | None] = mapped_column(
         ForeignKey("roles.id"), nullable=True
     )
-    reviewed_by_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    reviewed_by_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
     )
-    reviewed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    access_expires_at: Mapped[Optional[datetime]] = mapped_column(
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    access_expires_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-    ip_address: Mapped[Optional[str]] = mapped_column(String(45), nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
 
 
 # ── Tokens ─────────────────────────────────────────────────────────────────
@@ -203,7 +202,7 @@ class ActivationToken(Base):
     )
     token_hash: Mapped[str] = mapped_column(String(128), unique=True, nullable=False, index=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    used_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     user: Mapped[User] = relationship("User", back_populates="activation_tokens")
 
@@ -217,7 +216,7 @@ class PasswordResetToken(Base):
     )
     token_hash: Mapped[str] = mapped_column(String(128), unique=True, nullable=False, index=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    used_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     user: Mapped[User] = relationship("User", back_populates="password_reset_tokens")
 
@@ -236,9 +235,9 @@ class Session(Base):
         String(128), unique=True, nullable=False, index=True
     )
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    revoked_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    ip_address: Mapped[Optional[str]] = mapped_column(String(45), nullable=True)
-    user_agent: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(String(512), nullable=True)
 
     user: Mapped[User] = relationship("User", back_populates="sessions")
 
@@ -248,15 +247,15 @@ class AuditLogEntry(Base):
     __tablename__ = "audit_log_entries"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    actor_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    actor_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
-    actor_email: Mapped[Optional[str]] = mapped_column(String(254), nullable=True)
+    actor_email: Mapped[str | None] = mapped_column(String(254), nullable=True)
     action: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
-    resource_type: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
-    resource_id: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    detail: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    ip_address: Mapped[Optional[str]] = mapped_column(String(45), nullable=True)
+    resource_type: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    resource_id: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    detail: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
     success: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     logged_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -271,8 +270,8 @@ class EmailLog(Base):
     recipient: Mapped[str] = mapped_column(String(254), nullable=False)
     template: Mapped[str] = mapped_column(String(80), nullable=False)
     subject: Mapped[str] = mapped_column(String(300), nullable=False)
-    sent_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    error: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
     success: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
 
@@ -286,17 +285,17 @@ class Dataset(Base):
     workspace_id: Mapped[int] = mapped_column(
         ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False
     )
-    owner_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    owner_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    file_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    file_size_bytes: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    mime_type: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    row_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    schema_version: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
-    recipe_slug: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    file_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    file_size_bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    mime_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    row_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    schema_version: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    recipe_slug: Mapped[str | None] = mapped_column(String(80), nullable=True)
     status: Mapped[str] = mapped_column(String(30), default="uploaded", nullable=False)
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
@@ -317,7 +316,7 @@ class DatasetArtifact(Base):
     )
     artifact_type: Mapped[str] = mapped_column(String(60), nullable=False)
     file_path: Mapped[str] = mapped_column(String(500), nullable=False)
-    created_at_override: Mapped[Optional[datetime]] = mapped_column(
+    created_at_override: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
 
@@ -331,22 +330,22 @@ class AuditRun(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    dataset_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    dataset_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("datasets.id", ondelete="SET NULL"), nullable=True
     )
     workspace_id: Mapped[int] = mapped_column(
         ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False
     )
-    initiated_by_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    initiated_by_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
-    recipe_slug: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    recipe_slug: Mapped[str | None] = mapped_column(String(80), nullable=True)
     status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False, index=True)
-    run_dir: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    run_dir: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    dataset: Mapped[Optional[Dataset]] = relationship("Dataset", back_populates="audit_runs")
+    dataset: Mapped[Dataset | None] = relationship("Dataset", back_populates="audit_runs")
     stages: Mapped[list[AuditRunStage]] = relationship(
         "AuditRunStage", back_populates="run", cascade="all, delete-orphan"
     )
@@ -361,9 +360,9 @@ class AuditRunStage(Base):
     )
     stage_name: Mapped[str] = mapped_column(String(60), nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
-    started_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    error: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     run: Mapped[AuditRun] = relationship("AuditRun", back_populates="stages")
 
@@ -378,14 +377,14 @@ class ModelRegistryEntry(Base):
     workspace_id: Mapped[int] = mapped_column(
         ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False
     )
-    owner_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    owner_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     adapter_type: Mapped[str] = mapped_column(String(40), nullable=False)
-    file_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    endpoint_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    file_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    endpoint_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    metadata_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
 
@@ -396,9 +395,9 @@ class Recipe(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    yaml_content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    author_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    yaml_content: Mapped[str | None] = mapped_column(Text, nullable=True)
+    author_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     status: Mapped[str] = mapped_column(String(20), default="draft", nullable=False)
@@ -412,19 +411,19 @@ class ComplianceExport(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    run_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    run_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("audit_runs.id", ondelete="SET NULL"), nullable=True
     )
     workspace_id: Mapped[int] = mapped_column(
         ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False
     )
     export_type: Mapped[str] = mapped_column(String(40), nullable=False)
-    file_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    file_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
     sensitivity: Mapped[str] = mapped_column(String(30), default="aggregate", nullable=False)
-    downloaded_by_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    downloaded_by_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
-    downloaded_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    downloaded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 # ── Integration Artifact ──────────────────────────────────────────────────
@@ -432,10 +431,10 @@ class IntegrationArtifact(Base):
     __tablename__ = "integration_artifacts"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    run_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+    run_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("audit_runs.id", ondelete="SET NULL"), nullable=True
     )
     integration_type: Mapped[str] = mapped_column(String(40), nullable=False)
     direction: Mapped[str] = mapped_column(String(10), nullable=False)
-    payload_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    external_ref: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    payload_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    external_ref: Mapped[str | None] = mapped_column(String(300), nullable=True)

@@ -13,13 +13,14 @@ This module:
 """
 from __future__ import annotations
 
+from datetime import UTC
 from typing import Any
 
 CARISMA_SCHEMA_VERSION = "1.0"
 
 CARISMA_EXCHANGE_SCHEMA: dict[str, Any] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://github.com/Prometheus-X-association/t-ai-affectlog/schemas/carisma-exchange-v1.json",
+    "$id": "https://github.com/roy-saurabh/edge_affectlog/schemas/carisma-exchange-v1.json",
     "title": "AffectLog → CARiSMA Metadata Exchange",
     "description": (
         "Schema for exporting AffectLog operation-time dataset and model audit findings "
@@ -99,7 +100,7 @@ def build_carisma_export(audit_artifacts: dict[str, Any]) -> dict[str, Any]:
 
     `audit_artifacts` is the dashboard_payload.json dict from a completed run.
     """
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     privacy = audit_artifacts.get("privacy_report", {})
     metrics = audit_artifacts.get("metrics", {})
@@ -108,7 +109,7 @@ def build_carisma_export(audit_artifacts: dict[str, Any]) -> dict[str, Any]:
     return {
         "schemaVersion": CARISMA_SCHEMA_VERSION,
         "exportType": "dataset_audit",
-        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "generatedAt": datetime.now(UTC).isoformat(),
         "sourceSystem": "AffectLog Trustworthy AI Assessment v1.0",
         "auditRunId": audit_artifacts.get("run_id", ""),
         "auditSummary": {
@@ -128,7 +129,7 @@ def build_carisma_export(audit_artifacts: dict[str, Any]) -> dict[str, Any]:
         "complianceMappings": {
             "gdprArticlesTriggered": audit_artifacts.get("gdpr_articles", []),
             "aiActAnnexIVRelevant": audit_artifacts.get("ai_act_relevant", False),
-            "dataGovernancePolicyRef": "https://github.com/Prometheus-X-association/t-ai-affectlog/docs/data-governance.md",
+            "dataGovernancePolicyRef": "https://github.com/roy-saurabh/edge_affectlog/docs/data-governance.md",
         },
         "carismaAnnotations": {},
     }

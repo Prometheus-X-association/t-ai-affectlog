@@ -9,8 +9,7 @@ from __future__ import annotations
 import hashlib
 import secrets
 import uuid
-from datetime import datetime, timedelta, timezone
-from typing import Optional
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,14 +26,14 @@ def _new_token() -> tuple[str, str]:
 
 def _expiry() -> datetime:
     ttl = get_settings().session_ttl_seconds
-    return datetime.now(timezone.utc) + timedelta(seconds=ttl)
+    return datetime.now(UTC) + timedelta(seconds=ttl)
 
 
 async def create_session(
     db: AsyncSession,
     user: User,
-    ip_address: Optional[str] = None,
-    user_agent: Optional[str] = None,
+    ip_address: str | None = None,
+    user_agent: str | None = None,
 ) -> str:
     """Create a DB session, return the plaintext token."""
     raw, digest = _new_token()
@@ -51,10 +50,10 @@ async def create_session(
     return raw
 
 
-async def get_session_user(db: AsyncSession, token: str) -> Optional[User]:
+async def get_session_user(db: AsyncSession, token: str) -> User | None:
     """Validate token, return User or None if invalid/expired/revoked."""
     digest = hashlib.sha256(token.encode()).hexdigest()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     result = await db.execute(
         select(Session).where(
             Session.session_token_hash == digest,
@@ -73,7 +72,7 @@ async def get_session_user(db: AsyncSession, token: str) -> Optional[User]:
 
 async def revoke_session(db: AsyncSession, token: str) -> None:
     digest = hashlib.sha256(token.encode()).hexdigest()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     await db.execute(
         update(Session)
         .where(Session.session_token_hash == digest)
@@ -82,7 +81,7 @@ async def revoke_session(db: AsyncSession, token: str) -> None:
 
 
 async def revoke_all_sessions(db: AsyncSession, user_id: uuid.UUID) -> None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     await db.execute(
         update(Session)
         .where(Session.user_id == user_id, Session.revoked_at.is_(None))

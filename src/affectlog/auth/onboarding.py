@@ -6,8 +6,7 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,8 +34,8 @@ async def approve_registration(
     approver: User,
     role_name: str = "Viewer",
     workspace_slug: str = "default",
-    access_expires_at: Optional[datetime] = None,
-    admin_notes: Optional[str] = None,
+    access_expires_at: datetime | None = None,
+    admin_notes: str | None = None,
 ) -> tuple[User, str]:
     """
     Approve a pending registration.
@@ -52,7 +51,7 @@ async def approve_registration(
     )
     reg = reg_result.scalar_one_or_none()
     if reg is None:
-        from fastapi import HTTPException, status
+        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Pending registration not found or already processed.")
 
     # Create user (inactive until token activation)
@@ -92,7 +91,7 @@ async def approve_registration(
     # Update registration record
     reg.status = "approved"
     reg.reviewed_by_id = approver.id
-    reg.reviewed_at = datetime.now(timezone.utc)
+    reg.reviewed_at = datetime.now(UTC)
     reg.admin_notes = admin_notes
     reg.access_expires_at = access_expires_at
 
@@ -115,7 +114,7 @@ async def reject_registration(
     *,
     registration_id: uuid.UUID,
     approver: User,
-    admin_notes: Optional[str] = None,
+    admin_notes: str | None = None,
 ) -> None:
     reg_result = await db.execute(
         select(PendingRegistration).where(
@@ -130,7 +129,7 @@ async def reject_registration(
 
     reg.status = "rejected"
     reg.reviewed_by_id = approver.id
-    reg.reviewed_at = datetime.now(timezone.utc)
+    reg.reviewed_at = datetime.now(UTC)
     reg.admin_notes = admin_notes
     await db.flush()
     await log_event(
@@ -179,7 +178,7 @@ async def activate_account(
     user.hashed_password = hash_password(new_password)
     user.is_active = True
     user.must_change_password = False
-    token.used_at = datetime.now(timezone.utc)
+    token.used_at = datetime.now(UTC)
     await db.flush()
     await log_event(
         db,
@@ -203,7 +202,7 @@ async def resend_activation(
     await db.execute(
         update(ActivationToken)
         .where(ActivationToken.user_id == user.id, ActivationToken.used_at.is_(None))
-        .values(used_at=datetime.now(timezone.utc))
+        .values(used_at=datetime.now(UTC))
     )
     plain, digest = generate_token()
     db.add(ActivationToken(

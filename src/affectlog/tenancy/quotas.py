@@ -64,6 +64,7 @@ async def increment_usage(
 
     try:
         from sqlalchemy.dialects.postgresql import insert as pg_insert
+
         from affectlog.tenancy.models import UsageRecord
 
         period = datetime.utcnow().strftime("%Y-%m")

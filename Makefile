@@ -1,6 +1,6 @@
 # AffectLog – Trustworthy AI Assessment
 # Community Edition | Managed Edition
-# Prometheus-X BB04 / EDGE-Skills · https://github.com/Prometheus-X-association/t-ai-affectlog
+# Prometheus-X BB04 / EDGE-Skills · https://github.com/roy-saurabh/edge_affectlog
 # Run 'make help' for available targets.
 
 .PHONY: help install seed create-admin test test-e2e test-slow lint typecheck \

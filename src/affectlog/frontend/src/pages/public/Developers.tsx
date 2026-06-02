@@ -87,7 +87,7 @@ const CONTRIB_AREAS = [
 ];
 
 const QUICK_COMMANDS = [
-  { cmd: "git clone https://github.com/Prometheus-X-association/t-ai-affectlog", color: "#22d3ee", comment: "Clone" },
+  { cmd: "git clone https://github.com/roy-saurabh/edge_affectlog", color: "#22d3ee", comment: "Clone" },
   { cmd: "docker compose up",                                                      color: "#34d399", comment: "Start all services" },
   { cmd: "make seed && make create-admin",                                          color: "#a78bfa", comment: "Initialise" },
   { cmd: "make test",                                                              color: "#38bdf8", comment: "Run test suite" },
@@ -130,7 +130,7 @@ export default function Developers() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog"
+                  href="https://github.com/roy-saurabh/edge_affectlog"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-white rounded-xl px-6 py-3 border border-white/10 hover:border-cyan-400/30 hover:bg-cyan-400/[0.05] transition-all"
@@ -138,7 +138,7 @@ export default function Developers() {
                   <Github size={16} /> View on GitHub
                 </a>
                 <a
-                  href="https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-slate-300 rounded-xl px-6 py-3 hover:bg-white/[0.04] transition-all"
@@ -188,7 +188,7 @@ export default function Developers() {
                 return (
                   <FadeUp key={area.title} delay={i * 0.04}>
                     <a
-                      href={`https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/${area.guide}`}
+                      href={`https://github.com/roy-saurabh/edge_affectlog/blob/main/${area.guide}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block rounded-xl p-5 h-full border border-white/[0.06] hover:border-cyan-400/20 hover:bg-cyan-400/[0.03] transition-all group"

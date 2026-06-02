@@ -10,11 +10,17 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import (
-    BigInteger, Boolean, DateTime, ForeignKey, Integer,
-    String, Text, UniqueConstraint, func,
+    BigInteger,
+    Boolean,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -29,24 +35,24 @@ class Tenant(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     plan: Mapped[str] = mapped_column(String(40), default="managed_cloud", nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
-    suspended_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    suspended_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    suspended_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    suspended_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    settings: Mapped[Optional["TenantSettings"]] = relationship("TenantSettings", back_populates="tenant", uselist=False)
-    domains: Mapped[list["TenantDomain"]] = relationship("TenantDomain", back_populates="tenant", cascade="all, delete-orphan")
-    memberships: Mapped[list["TenantMembership"]] = relationship("TenantMembership", back_populates="tenant", cascade="all, delete-orphan")
-    invitations: Mapped[list["TenantInvitation"]] = relationship("TenantInvitation", back_populates="tenant", cascade="all, delete-orphan")
-    feature_flags: Mapped[list["TenantFeatureFlag"]] = relationship("TenantFeatureFlag", back_populates="tenant", cascade="all, delete-orphan")
-    quota: Mapped[Optional["TenantQuota"]] = relationship("TenantQuota", back_populates="tenant", uselist=False)
-    audit_logs: Mapped[list["TenantAuditLog"]] = relationship("TenantAuditLog", back_populates="tenant", cascade="all, delete-orphan")
-    support_grants: Mapped[list["SupportAccessGrant"]] = relationship("SupportAccessGrant", back_populates="tenant", cascade="all, delete-orphan")
-    smtp_settings: Mapped[Optional["TenantSmtpSettings"]] = relationship("TenantSmtpSettings", back_populates="tenant", uselist=False)
-    storage_policy: Mapped[Optional["TenantStoragePolicy"]] = relationship("TenantStoragePolicy", back_populates="tenant", uselist=False)
+    settings: Mapped[TenantSettings | None] = relationship("TenantSettings", back_populates="tenant", uselist=False)
+    domains: Mapped[list[TenantDomain]] = relationship("TenantDomain", back_populates="tenant", cascade="all, delete-orphan")
+    memberships: Mapped[list[TenantMembership]] = relationship("TenantMembership", back_populates="tenant", cascade="all, delete-orphan")
+    invitations: Mapped[list[TenantInvitation]] = relationship("TenantInvitation", back_populates="tenant", cascade="all, delete-orphan")
+    feature_flags: Mapped[list[TenantFeatureFlag]] = relationship("TenantFeatureFlag", back_populates="tenant", cascade="all, delete-orphan")
+    quota: Mapped[TenantQuota | None] = relationship("TenantQuota", back_populates="tenant", uselist=False)
+    audit_logs: Mapped[list[TenantAuditLog]] = relationship("TenantAuditLog", back_populates="tenant", cascade="all, delete-orphan")
+    support_grants: Mapped[list[SupportAccessGrant]] = relationship("SupportAccessGrant", back_populates="tenant", cascade="all, delete-orphan")
+    smtp_settings: Mapped[TenantSmtpSettings | None] = relationship("TenantSmtpSettings", back_populates="tenant", uselist=False)
+    storage_policy: Mapped[TenantStoragePolicy | None] = relationship("TenantStoragePolicy", back_populates="tenant", uselist=False)
 
 
 # ── TenantSettings ───────────────────────────────────────────────────────────
@@ -59,7 +65,7 @@ class TenantSettings(Base):
     require_mfa: Mapped[bool] = mapped_column(Boolean, default=False)
     session_timeout_minutes: Mapped[int] = mapped_column(Integer, default=480)
     max_dataset_size_mb: Mapped[int] = mapped_column(Integer, default=500)
-    extra: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    extra: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="settings")
 
@@ -102,10 +108,10 @@ class TenantInvitation(Base):
     email: Mapped[str] = mapped_column(String(254), nullable=False, index=True)
     tenant_role: Mapped[str] = mapped_column(String(60), default="researcher")
     token: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
-    invited_by_user_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    invited_by_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    accepted_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    accepted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="pending")
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="invitations")
@@ -121,7 +127,7 @@ class TenantFeatureFlag(Base):
     tenant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tenants.id", ondelete="CASCADE"), index=True)
     feature: Mapped[str] = mapped_column(String(80), nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    set_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    set_by: Mapped[str | None] = mapped_column(String(100), nullable=True)
     set_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="feature_flags")
@@ -181,8 +187,8 @@ class SupportAccessGrant(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     raw_data_access: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    revoked_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    revoked_by_user_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    revoked_by_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="pending")
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="support_grants")
@@ -194,14 +200,14 @@ class TenantAuditLog(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     tenant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tenants.id", ondelete="CASCADE"), index=True)
-    actor_user_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    actor_email: Mapped[Optional[str]] = mapped_column(String(254), nullable=True)
+    actor_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    actor_email: Mapped[str | None] = mapped_column(String(254), nullable=True)
     event_type: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    resource_type: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
-    resource_id: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    detail: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    resource_type: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    resource_id: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    detail: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
-    ip_address: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="audit_logs")
 
@@ -217,7 +223,7 @@ class TenantSmtpSettings(Base):
     username: Mapped[str] = mapped_column(String(254), nullable=False)
     encrypted_password: Mapped[str] = mapped_column(Text, nullable=False)
     use_tls: Mapped[bool] = mapped_column(Boolean, default=True)
-    from_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    from_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
     from_email: Mapped[str] = mapped_column(String(254), nullable=False)
 
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="smtp_settings")
@@ -230,8 +236,8 @@ class TenantStoragePolicy(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     tenant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tenants.id", ondelete="CASCADE"), unique=True)
     storage_backend: Mapped[str] = mapped_column(String(20), default="local")
-    s3_bucket: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    s3_prefix: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    s3_bucket: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    s3_prefix: Mapped[str | None] = mapped_column(String(200), nullable=True)
     artifact_retention_days: Mapped[int] = mapped_column(Integer, default=90)
     audit_log_retention_days: Mapped[int] = mapped_column(Integer, default=365)
 
@@ -253,11 +259,11 @@ class ManagedAccessRequest(Base):
     country: Mapped[str] = mapped_column(String(100), nullable=False)
     sector: Mapped[str] = mapped_column(String(100), nullable=False)
     intended_use: Mapped[str] = mapped_column(Text, nullable=False)
-    expected_volume: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    expected_volume: Mapped[str | None] = mapped_column(String(200), nullable=True)
     deployment_pref: Mapped[str] = mapped_column(String(50), default="managed_cloud")
-    compliance_needs: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    compliance_needs: Mapped[str | None] = mapped_column(Text, nullable=True)
+    message: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="pending", index=True)
-    reviewed_by: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    reviewed_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    reviewed_by: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
