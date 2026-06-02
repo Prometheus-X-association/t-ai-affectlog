@@ -1,0 +1,99 @@
+{
+  "_comment": "AffectLog metadata exchange example — CARiSMA and LOLA interoperability",
+  "_doc": "https://github.com/Prometheus-X-association/t-ai-affectlog/docs/carisma-lola-interoperability.md",
+
+  "carisma_export": {
+    "schemaVersion": "1.0",
+    "exportType": "dataset_audit",
+    "generatedAt": "2026-06-02T10:00:00Z",
+    "sourceSystem": "AffectLog Trustworthy AI Assessment v1.0",
+    "auditRunId": "run_20260602T100000_example",
+    "datasetId": "ds-maskott-tactileo-sample",
+    "auditSummary": {
+      "privacyRiskLevel": "low",
+      "piiFieldsDetected": 2,
+      "pseudonymisationApplied": true,
+      "rowCount": 500000,
+      "completenessScore": 0.97,
+      "qualityScore": 0.91,
+      "fairnessFlags": ["long_tail_imbalance", "temporal_concentration"]
+    },
+    "concentrationMetrics": {
+      "giniCoefficient": 0.42,
+      "dominanceRatio": 0.15,
+      "coverageAtK": 0.78
+    },
+    "modelRiskIndicators": {
+      "adapterType": "sklearn",
+      "featureCount": 8,
+      "topFeatureImportances": [
+        {"feature": "ResourceType", "importance": 0.31},
+        {"feature": "ViewContext", "importance": 0.24},
+        {"feature": "Duration_normalized", "importance": 0.18}
+      ]
+    },
+    "complianceMappings": {
+      "gdprArticlesTriggered": ["Art.5(1)(a)", "Art.5(1)(e)", "Art.25"],
+      "aiActAnnexIVRelevant": true,
+      "dataGovernancePolicyRef": "https://github.com/Prometheus-X-association/t-ai-affectlog/blob/main/docs/data-governance.md"
+    },
+    "carismaAnnotations": {
+      "_note": "This section is populated by CARiSMA tooling during design-time risk analysis"
+    }
+  },
+
+  "lola_export": {
+    "schemaVersion": "1.0",
+    "exportType": "dataset_metrics",
+    "generatedAt": "2026-06-02T10:00:00Z",
+    "sourceSystem": "AffectLog Trustworthy AI Assessment v1.0",
+    "auditRunId": "run_20260602T100000_example",
+    "datasetId": "ds-maskott-tactileo-sample",
+    "scenarioId": "lola-scenario-eduskills-2026-001",
+    "metrics": {
+      "coverage_at_k": 0.78,
+      "gini_coefficient": 0.42,
+      "entropy": 3.21,
+      "sparsity": 0.85,
+      "long_tail_coverage": 0.34,
+      "ndcg": 0.61,
+      "precision_at_k": 0.22,
+      "recall_at_k": 0.31,
+      "hit_rate": 0.48,
+      "diversity": 0.67,
+      "novelty": 0.55,
+      "personalization": 0.71
+    },
+    "datasetProfile": {
+      "rowCount": 500000,
+      "entityCount": 8500,
+      "resourceCount": 1200,
+      "temporalSpanDays": 365
+    },
+    "lolaAnnotations": {
+      "_note": "This section is populated by LOLA tooling during algorithm evaluation"
+    }
+  },
+
+  "exchange_envelope": {
+    "envelopeVersion": "1.0",
+    "source": "AffectLog",
+    "destination": "Prometheus-X BB04 Ecosystem",
+    "runId": "run_20260602T100000_example",
+    "timestamp": "2026-06-02T10:05:00Z",
+    "payload": {
+      "type": "combined_metadata_export",
+      "contains": ["carisma_export", "lola_export"]
+    }
+  },
+
+  "dataset_summary": {
+    "name": "Maskott/Tactileo teacher interaction traces (anonymised sample)",
+    "description": "Pseudonymised dataset of teacher resource access patterns, normalised to xAPI format. All direct identifiers replaced with HMAC-SHA256 hashes. EntityId and EntityUaiCode suppressed. IsViewerAnonymous=true records excluded from export.",
+    "schema": "maskott_csv_v1",
+    "recipe": "maskott_tactileo",
+    "privacyLevel": "pseudonymised",
+    "exportSensitivity": "aggregate_and_pseudonymised",
+    "license": "MIT (code); dataset subject to original data holder agreement"
+  }
+}

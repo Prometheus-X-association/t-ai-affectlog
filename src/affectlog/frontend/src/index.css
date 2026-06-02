@@ -1,29 +1,77 @@
+@import "@fontsource-variable/inter";
+@import "./design-system/theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   * { box-sizing: border-box; }
-  html { font-family: "Inter", system-ui, sans-serif; }
+  html {
+    font-family: var(--font-sans, "InterVariable", "Inter", system-ui, sans-serif);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
   body { @apply bg-slate-950 text-slate-200 m-0; }
-  code, pre { font-family: "JetBrains Mono", "Fira Code", monospace; }
+  code, pre {
+    font-family: var(--font-mono, "JetBrains Mono", "Fira Code", monospace);
+  }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { @apply bg-slate-900; }
   ::-webkit-scrollbar-thumb { @apply bg-slate-600 rounded-full; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-slate-500; }
+  ::selection { background: rgba(34,211,238,0.2); color: #f1f5f9; }
 }
 
 @layer components {
+  /* ── Cards ── */
   .card {
     @apply bg-slate-800 border border-slate-700 rounded-xl p-5;
   }
   .card-sm {
     @apply bg-slate-800 border border-slate-700 rounded-lg p-4;
   }
+  /* Glass card for public/dark pages */
+  .card-glass {
+    @apply rounded-xl p-6 border;
+    background: rgba(255,255,255,0.035);
+    border-color: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .card-glass:hover {
+    border-color: rgba(34,211,238,0.2);
+  }
+
+  /* ── Buttons ── */
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500
            text-white font-medium px-4 py-2 rounded-lg transition-colors
            disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+  }
+  .btn-cyan {
+    @apply inline-flex items-center gap-2 font-semibold rounded-xl transition-all
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+    color: #fff;
+    box-shadow: 0 0 24px rgba(34,211,238,0.25);
+  }
+  .btn-cyan:hover {
+    box-shadow: 0 0 36px rgba(34,211,238,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-outline-dim {
+    @apply inline-flex items-center gap-2 font-medium rounded-xl transition-all border;
+    color: #cbd5e1;
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+  }
+  .btn-outline-dim:hover {
+    color: #f1f5f9;
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.07);
   }
   .btn-secondary {
     @apply inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600
@@ -32,18 +80,24 @@
   }
   .btn-ghost {
     @apply inline-flex items-center gap-2 hover:bg-slate-700
-           text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-lg transition-colors text-sm;
+           text-slate-400 hover:text-slate-200 font-medium px-3 py-2
+           rounded-lg transition-colors text-sm;
   }
+
+  /* ── Form inputs ── */
   .input {
     @apply w-full bg-slate-900 border border-slate-700 text-slate-200
            placeholder-slate-500 rounded-lg px-3 py-2 text-sm
-           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+           focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-600/50;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
   .select {
     @apply bg-slate-900 border border-slate-700 text-slate-200
            rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2
-           focus:ring-indigo-500 focus:border-transparent;
+           focus:ring-cyan-500/50 focus:border-cyan-600/50;
   }
+
+  /* ── Badges ── */
   .badge-ok {
     @apply inline-flex items-center gap-1 bg-emerald-900/60 text-emerald-400
            border border-emerald-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
@@ -60,6 +114,20 @@
     @apply inline-flex items-center gap-1 bg-indigo-900/60 text-indigo-400
            border border-indigo-700/50 text-xs font-medium px-2 py-0.5 rounded-full;
   }
+  .badge-cyan {
+    @apply inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full;
+    background: rgba(34,211,238,0.12);
+    color: #22d3ee;
+    border: 1px solid rgba(34,211,238,0.25);
+  }
+  .badge-violet {
+    @apply inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full;
+    background: rgba(167,139,250,0.12);
+    color: #a78bfa;
+    border: 1px solid rgba(167,139,250,0.25);
+  }
+
+  /* ── Nav ── */
   .nav-link {
     @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
            text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 transition-all;
@@ -67,19 +135,23 @@
   .nav-link.active {
     @apply bg-indigo-600/20 text-indigo-400 border border-indigo-500/30;
   }
-  .metric-big {
-    @apply text-3xl font-bold text-white;
+
+  /* ── Typography utils ── */
+  .metric-big { @apply text-3xl font-bold text-white; }
+  .section-title { @apply text-lg font-semibold text-slate-100 mb-4; }
+  .stat-label { @apply text-xs text-slate-500 uppercase tracking-wider font-medium; }
+
+  /* ── Chart ── */
+  .gini-bar-bg  { @apply h-3 bg-slate-700 rounded-full overflow-hidden; }
+  .gini-bar-fill { @apply h-full rounded-full transition-all duration-700; }
+
+  /* ── Accent line ── */
+  .accent-line-cyan {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,211,238,0.5), transparent);
   }
-  .section-title {
-    @apply text-lg font-semibold text-slate-100 mb-4;
-  }
-  .stat-label {
-    @apply text-xs text-slate-500 uppercase tracking-wider font-medium;
-  }
-  .gini-bar-bg {
-    @apply h-3 bg-slate-700 rounded-full overflow-hidden;
-  }
-  .gini-bar-fill {
-    @apply h-full rounded-full transition-all duration-700;
+  .accent-line-violet {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(167,139,250,0.5), transparent);
   }
 }

@@ -1,0 +1,24 @@
+AffectLog – Trustworthy AI Assessment
+======================================
+
+Hello {{ full_name }},
+
+Your access request to the AffectLog assessment platform has been approved.
+
+Assigned access level: {{ role }}
+
+Activate your account here:
+{{ activation_url }}
+
+This link is valid for 24 hours and can only be used once.
+If it expires, contact an administrator to resend your activation email.
+
+Best regards,
+The AffectLog Platform Team
+
+---
+AffectLog is developed in the context of the EDGE-Skills project,
+part of the Prometheus-X Trustworthy AI Assessment building block ecosystem.
+Co-funded by the European Union under the Digital Europe Programme.
+
+{{ app_base_url }} | https://github.com/Prometheus-X-association/t-ai-affectlog

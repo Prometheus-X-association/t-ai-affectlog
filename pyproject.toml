@@ -4,17 +4,17 @@ build-backend = "hatchling.build"
 
 [project]
 name = "affectlog"
-version = "0.1.0"
-description = "AffectLog Trustworthy AI Assessment Building Block (ALT-AI) — D3.7 EDGE-Skills"
+version = "1.0.0"
+description = "AffectLog – Trustworthy AI Assessment for Education and Skills Data Spaces (Prometheus-X BB04 / EDGE-Skills)"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
 authors = [
   { name = "AffectLog Team" },
 ]
-keywords = ["trustworthy-ai", "xapi", "fairness", "explainability", "education", "gdpr", "eu-ai-act"]
+keywords = ["trustworthy-ai", "xapi", "fairness", "explainability", "education", "gdpr", "eu-ai-act", "prometheus-x", "edge-skills"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.11",
@@ -23,13 +23,31 @@ classifiers = [
 ]
 
 dependencies = [
-  # Core
+  # Core web framework
   "fastapi>=0.111.0",
   "uvicorn[standard]>=0.29.0",
   "pydantic>=2.7.0",
   "pydantic-settings>=2.2.0",
   "typer[all]>=0.12.0",
   "rich>=13.7.0",
+  "starlette>=0.37.0",
+  # Database — SQLAlchemy 2.0 + async
+  "sqlalchemy[asyncio]>=2.0.0",
+  "alembic>=1.13.0",
+  "psycopg[binary,pool]>=3.1.0",
+  "aiosqlite>=0.20.0",
+  # Cache / queue
+  "redis>=5.0.0",
+  "celery[redis]>=5.3.0",
+  # Auth — Argon2id password hashing
+  "argon2-cffi>=23.1.0",
+  "python-jose[cryptography]>=3.3.0",
+  "itsdangerous>=2.1.0",
+  "pyotp>=2.9.0",
+  # Email — async SMTP
+  "aiosmtplib>=3.0.0",
+  # Rate limiting
+  "slowapi>=0.1.9",
   # Data processing — streaming / large files
   "polars>=0.20.0",
   "pyarrow>=15.0.0",
@@ -52,6 +70,7 @@ dependencies = [
   "python-multipart>=0.0.9",
   "orjson>=3.10.0",
   "ulid-py>=1.1.0",
+  "email-validator>=2.1.0",
 ]
 
 [project.optional-dependencies]
@@ -75,6 +94,8 @@ dev = [
   "pip-audit>=2.7.0",
   "pandas>=2.2.0",
   "faker>=25.0.0",
+  "pytest-mock>=3.14.0",
+  "aiosqlite>=0.20.0",
 ]
 all = [
   "affectlog[onnx,torch,tensorflow,shap,docs,dev]",
@@ -84,10 +105,10 @@ all = [
 affectlog = "affectlog.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/roy-saurabh/edge_affectlog"
-Documentation = "https://prometheus-x-association.github.io/docs/t-ai-affectlog/"
-Repository = "https://github.com/roy-saurabh/edge_affectlog"
-Issues = "https://github.com/roy-saurabh/edge_affectlog/issues"
+Homepage = "https://github.com/Prometheus-X-association/t-ai-affectlog"
+Documentation = "https://prometheus-x-association.github.io/docs/t-ai/"
+Repository = "https://github.com/Prometheus-X-association/t-ai-affectlog"
+Issues = "https://github.com/Prometheus-X-association/t-ai-affectlog/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/affectlog"]

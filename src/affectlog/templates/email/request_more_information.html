@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Additional Information Required – AffectLog</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; margin: 0; padding: 20px; }
+  .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .header { background: #1e293b; padding: 32px 40px; } .header h1 { color: #e2e8f0; font-size: 20px; margin: 0; }
+  .body { padding: 32px 40px; color: #334155; font-size: 15px; line-height: 1.6; }
+  .question-box { background: #f8fafc; border-left: 3px solid #4f46e5; padding: 12px 16px; margin: 16px 0; }
+  .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 40px; font-size: 12px; color: #94a3b8; }
+  .footer a { color: #6366f1; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>AffectLog – Additional Information Required</h1></div>
+    <div class="body">
+      <p>Hello <strong>{{ full_name }}</strong>,</p>
+      <p>Thank you for your registration request. Our administrators would like additional information before processing your application.</p>
+      {% if questions %}
+      <div class="question-box">{{ questions }}</div>
+      {% endif %}
+      <p>Please reply to this email or contact the administrators directly with your response.</p>
+      <p>Best regards,<br>The AffectLog Platform Team</p>
+    </div>
+    <div class="footer">
+      <p>AffectLog · <a href="{{ app_base_url }}">{{ app_base_url }}</a></p>
+    </div>
+  </div>
+</body>
+</html>

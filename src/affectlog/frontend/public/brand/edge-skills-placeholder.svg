@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none">
+  <!-- PLACEHOLDER: Replace with official EDGE-Skills project logo -->
+  <!-- EDGE-Skills project: https://www.edge-skills.eu/ -->
+  <!-- Place official logo at frontend/public/brand/edge-skills-placeholder.svg -->
+  <rect width="160" height="40" rx="6" fill="#0f172a"/>
+  <rect x="8" y="10" width="20" height="20" rx="3" fill="#0ea5e9" opacity="0.8"/>
+  <text x="36" y="26" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e2e8f0">EDGE-Skills</text>
+</svg>

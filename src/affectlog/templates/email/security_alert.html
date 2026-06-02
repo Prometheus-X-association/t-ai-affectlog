@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Security Alert – AffectLog</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; margin: 0; padding: 20px; }
+  .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .header { background: #7f1d1d; padding: 32px 40px; } .header h1 { color: #fecaca; font-size: 20px; margin: 0; }
+  .body { padding: 32px 40px; color: #334155; font-size: 15px; line-height: 1.6; }
+  .alert-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 16px 0; }
+  .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 40px; font-size: 12px; color: #94a3b8; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>⚠ Security Alert – AffectLog</h1></div>
+    <div class="body">
+      <p>Hello <strong>{{ full_name }}</strong>,</p>
+      <div class="alert-box">
+        <strong>{{ alert_type }}</strong><br>{{ alert_detail }}
+      </div>
+      <p>If this was not you, please contact an administrator immediately and consider changing your password.</p>
+    </div>
+    <div class="footer"><p>AffectLog · {{ app_base_url }}</p></div>
+  </div>
+</body>
+</html>

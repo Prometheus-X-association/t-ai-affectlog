@@ -12,7 +12,11 @@ data/raw/*.xlsx
 data/raw/*.xls
 data/private/
 data/processed/
-runs/
+runs/*
+!runs/.gitkeep
+
+# Uploads directory (outside web root)
+data/uploads/
 
 # Synthetic samples committed intentionally — do NOT ignore data/samples/
 

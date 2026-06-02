@@ -1,13 +1,49 @@
-# AffectLog – Trustworthy AI Assessment Building Block (ALT-AI)
+# AffectLog – Trustworthy AI Assessment
 
-[![CI](https://github.com/roy-saurabh/edge_affectlog/actions/workflows/ci.yml/badge.svg)](https://github.com/roy-saurabh/edge_affectlog/actions)
+[![CI](https://github.com/Prometheus-X-association/t-ai-affectlog/actions/workflows/ci.yml/badge.svg)](https://github.com/Prometheus-X-association/t-ai-affectlog/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-green.svg)](docs/openapi.yaml)
 
-**EDGE-Skills / WP3 / D3.7 — Prometheus-X Association**
+**Open-source and managed Trustworthy AI assessment for education and skills data spaces.**  
+Part of the [Prometheus-X Trustworthy AI Assessment ecosystem (BB04)](https://prometheus-x.org/bb04-trustworthy-ai-assessment/).
 
-ALT-AI profiles educational AI datasets, applies privacy-preserving pseudonymisation, computes fairness and concentration metrics, generates EU AI Act / GDPR compliance exports, and exposes everything through an OpenAPI-first backend and a dynamic dashboard.
+---
+
+## Two ways to run AffectLog
+
+### Community Edition — self-hosted open source
+
+Self-hostable platform for universities, public-sector institutions, research labs,
+EdTechs, data providers, and auditors who need local or on-premise execution.
+Datasets remain under the control of the deploying institution.
+
+```bash
+git clone https://github.com/Prometheus-X-association/t-ai-affectlog
+docker compose up
+make seed && make create-admin
+# → http://localhost:3000
+```
+
+### Managed Edition — AffectLog-operated
+
+The same open-source platform hosted and operated by AffectLog.
+Provides tenant provisioning, managed backups, monitoring, support,
+managed email, usage metering, and optional enterprise services.
+
+→ [Request managed access](https://affectlog.ai/request-access)
+
+---
+
+**Key statements:**
+
+- The public repository contains the open-source Community Edition core.
+- Managed Edition services may include proprietary operational components not included in this repository.
+- The Community Edition core is fully usable without AffectLog Cloud.
+- Raw partner datasets are never included. Synthetic samples are provided.
+- Community Edition is MIT licensed.
+
+---
 
 ---
 

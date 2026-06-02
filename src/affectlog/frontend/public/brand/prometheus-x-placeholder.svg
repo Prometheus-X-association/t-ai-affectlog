@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" fill="none">
+  <!-- PLACEHOLDER: Replace with official Prometheus-X logo -->
+  <!-- Official Prometheus-X assets: https://prometheus-x.org/ -->
+  <!-- Place official logo at frontend/public/brand/prometheus-x-placeholder.svg -->
+  <rect width="180" height="40" rx="6" fill="#0f172a"/>
+  <polygon points="10,30 20,10 30,30" fill="#f97316" opacity="0.9"/>
+  <text x="38" y="26" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e2e8f0">Prometheus-X</text>
+</svg>

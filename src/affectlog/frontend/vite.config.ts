@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      "/api": "http://localhost:8000",
       "/v1": "http://localhost:8000",
       "/healthz": "http://localhost:8000",
       "/docs": "http://localhost:8000",
