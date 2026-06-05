@@ -1,4 +1,4 @@
-name: Deploy to Production (tai.affectlog.com)
+name: Deploy to Production (trustworthyai.affectlog.com)
 
 on:
   push:
@@ -169,14 +169,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ── 4. Deploy to tai.affectlog.com ────────────────────────────────────────
+  # ── 4. Deploy to trustworthyai.affectlog.com ─────────────────────────────
   deploy:
-    name: Deploy to tai.affectlog.com
+    name: Deploy to trustworthyai.affectlog.com
     runs-on: ubuntu-latest
     needs: [docker]
     environment:
       name: production
-      url: https://tai.affectlog.com
+      url: https://trustworthyai.affectlog.com
     # Requires these secrets in the production environment:
     #   DEPLOY_SSH_KEY   — private key for the deploy user
     #   DEPLOY_HOST      — hostname / IP of the production server
@@ -204,6 +204,6 @@ jobs:
 
             # Health check
             sleep 10
-            curl -fsS https://tai.affectlog.com/healthz || (docker compose logs --tail=50 && exit 1)
+            curl -fsS https://trustworthyai.affectlog.com/healthz || (docker compose logs --tail=50 && exit 1)
 
             echo "Deploy complete: $(date)"

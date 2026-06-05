@@ -4,19 +4,20 @@ from __future__ import annotations
 
 import contextlib
 import csv
+import http.client
 import ipaddress
 import json
 import logging
+import os
 import socket
+import ssl
 import tempfile
-import urllib.request
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
 from affectlog.capabilities.formats import FORMAT_BY_ID
 from affectlog.config import get_settings
-from affectlog.core.paths import resolve_safe_path
 from affectlog.wizard.schemas import (
     FieldInventoryEntry,
     FieldRole,
@@ -40,19 +41,26 @@ _PRIVATE_NETWORKS: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = (
 )
 
 
-def _is_ssrf_safe(url: str) -> tuple[bool, str]:
-    """Return (True, '') or (False, reason). Blocks private/link-local hosts."""
-    try:
-        host = urlparse(url).hostname or ""
-        if not host:
-            return False, "No hostname in URL."
-        for info in socket.getaddrinfo(host, None):
-            ip = ipaddress.ip_address(info[4][0])
-            if any(ip in net for net in _PRIVATE_NETWORKS):
-                return False, "URL resolves to a private or reserved address."
-        return True, ""
-    except OSError:
-        return False, "Could not resolve hostname."
+_SAFE_URL_SUFFIXES = frozenset(
+    {
+        ".csv",
+        ".tsv",
+        ".json",
+        ".jsonl",
+        ".ndjson",
+        ".parquet",
+        ".pq",
+        ".pkl",
+        ".joblib",
+        ".onnx",
+        ".pt",
+        ".pth",
+        ".h5",
+        ".keras",
+        ".txt",
+        ".tmp",
+    }
+)
 
 
 def _is_url(s: str) -> bool:
@@ -64,29 +72,84 @@ def _is_url(s: str) -> bool:
 
 
 def _fetch_url_to_tempfile(url: str) -> tuple[Path, int] | tuple[None, str]:
-    """Download url into a named temp file. Returns (path, size) or (None, error_msg)."""
-    safe, reason = _is_ssrf_safe(url)
-    if not safe:
-        return None, reason
+    """
+    Download url into a named temp file.
+    Resolves DNS once and connects directly to the pre-resolved IP to prevent DNS rebinding.
+    Returns (path, size) or (None, error_msg). Does NOT follow HTTP redirects.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        return None, "Only http/https URLs are supported."
+    host = parsed.hostname or ""
+    if not host:
+        return None, "No hostname in URL."
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+
+    # Resolve hostname → IP exactly once and validate before connecting (SSRF guard)
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "AffectLog-Inspector/1.0"})
-        with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310
-            content_length = int(resp.headers.get("Content-Length", 0))
-            if content_length > _URL_SIZE_LIMIT:
-                return (
-                    None,
-                    f"Remote file too large ({content_length // 1_048_576} MB). Limit is 50 MB.",
-                )
-            data = resp.read(_URL_SIZE_LIMIT + 1)
-            if len(data) > _URL_SIZE_LIMIT:
-                return None, "Remote file exceeds 50 MB limit."
-            suffix = Path(urlparse(url).path).suffix or ".tmp"
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tf:
-                tf.write(data)
-                tf.flush()
-                return Path(tf.name), len(data)
+        addrinfos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+        if not addrinfos:
+            return None, "Could not resolve hostname."
+        ip_str = addrinfos[0][4][0]
+    except OSError:
+        return None, "Could not resolve hostname."
+
+    try:
+        ip = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return None, "Could not parse resolved IP address."
+
+    if any(ip in net for net in _PRIVATE_NETWORKS):
+        return None, "URL resolves to a private or reserved address."
+
+    path_qs = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
+
+    conn: http.client.HTTPConnection | None = None
+    try:
+        # Connect directly to the pre-resolved IP — no DNS re-lookup at request time
+        raw_sock = socket.create_connection((ip_str, port), timeout=30)
+        if parsed.scheme == "https":
+            ctx = ssl.create_default_context()
+            # server_hostname ensures TLS certificate is verified for the original
+            # hostname (SNI), not the IP — required for correct certificate validation
+            tls_sock = ctx.wrap_socket(raw_sock, server_hostname=host)
+            conn = http.client.HTTPSConnection(host, port=port, timeout=30)
+            conn.sock = tls_sock
+        else:
+            conn = http.client.HTTPConnection(host, port=port, timeout=30)
+            conn.sock = raw_sock
+
+        conn.request("GET", path_qs, headers={"User-Agent": "AffectLog-Inspector/1.0"})
+        resp = conn.getresponse()
+
+        # Do NOT follow redirects — redirect targets bypass the SSRF validation above
+        if resp.status in (301, 302, 303, 307, 308):
+            return None, f"Redirects are not followed for security (HTTP {resp.status})."
+        if resp.status != 200:
+            return None, f"Remote server returned HTTP {resp.status}."
+
+        content_length = int(resp.getheader("Content-Length", 0) or 0)
+        if content_length > _URL_SIZE_LIMIT:
+            return (
+                None,
+                f"Remote file too large ({content_length // 1_048_576} MB). Limit is 50 MB.",
+            )
+        data = resp.read(_URL_SIZE_LIMIT + 1)
+        if len(data) > _URL_SIZE_LIMIT:
+            return None, "Remote file exceeds 50 MB limit."
+
+        suffix_raw = Path(parsed.path).suffix.lower() or ".tmp"
+        suffix = suffix_raw if suffix_raw in _SAFE_URL_SUFFIXES else ".tmp"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tf:
+            tf.write(data)
+            tf.flush()
+            return Path(tf.name), len(data)
     except Exception as exc:
         return None, f"Could not fetch URL: {exc}"
+    finally:
+        if conn is not None:
+            with contextlib.suppress(Exception):
+                conn.close()
 
 
 MASKOTT_REQUIRED = frozenset(["_id", "AccessDate", "ResourceId", "EntityId", "ResourceType"])
@@ -324,17 +387,17 @@ def inspect(req: InspectInputRequest) -> InspectInputResponse:
     else:
         _s = get_settings()
         _allowed = [
-            Path(_s.data_dir).resolve(),
-            Path(_s.runs_dir).resolve(),
-            Path(tempfile.gettempdir()).resolve(),
+            str(Path(_s.data_dir).resolve()) + os.sep,
+            str(Path(_s.runs_dir).resolve()) + os.sep,
+            str(Path(tempfile.gettempdir()).resolve()) + os.sep,
         ]
-        candidate = Path(path_str).resolve()
-        if not any(candidate.is_relative_to(b) for b in _allowed):
+        canon = os.path.realpath(path_str)
+        if not any(canon.startswith(a) for a in _allowed):
             return InspectInputResponse(
                 is_supported=False,
                 unsupported_reason="Dataset path is outside the allowed directories.",
             )
-        path = resolve_safe_path(Path(_s.data_dir), path_str) if not Path(path_str).is_absolute() else candidate
+        path = Path(canon)
         if not path.exists():
             return InspectInputResponse(
                 is_supported=False,

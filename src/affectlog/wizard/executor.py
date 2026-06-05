@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import contextlib
 import datetime
+import http.client
+import ipaddress
 import json
 import logging
+import socket
+import ssl
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from affectlog.config import get_settings
 from affectlog.core.ids import new_run_id
@@ -23,26 +29,71 @@ from affectlog.wizard.validator import validate_plan
 
 log = logging.getLogger(__name__)
 
+_PRIVATE_NETWORKS: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = (
+    ipaddress.ip_network("10.0.0.0/8"),
+    ipaddress.ip_network("172.16.0.0/12"),
+    ipaddress.ip_network("192.168.0.0/16"),
+    ipaddress.ip_network("127.0.0.0/8"),
+    ipaddress.ip_network("169.254.0.0/16"),
+    ipaddress.ip_network("::1/128"),
+    ipaddress.ip_network("fc00::/7"),
+    ipaddress.ip_network("fe80::/10"),
+)
+
+
+def _s(v: object) -> str:
+    """Sanitize a user-controlled value for safe logging (strips newlines)."""
+    return str(v).replace("\n", "\\n").replace("\r", "\\r")
+
+
 # In-memory run store (replace with DB in production)
 _WIZARD_RUNS: dict[str, dict[str, Any]] = {}
 
 
 def _resolve_dataset_path(dataset_path: str, run_dir: Path) -> Path:
     """Return a local Path for dataset_path, downloading first if it is a URL."""
-    from urllib.parse import urlparse
-
     parsed = urlparse(dataset_path)
     if parsed.scheme in ("http", "https"):
-        import urllib.request
+        host = parsed.hostname or ""
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
 
+        # Resolve hostname → IP once and validate before connecting (SSRF guard)
+        try:
+            addrinfos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+            ip_str = addrinfos[0][4][0]
+            ip = ipaddress.ip_address(ip_str)
+        except (OSError, IndexError, ValueError) as exc:
+            raise ValueError(f"Could not resolve dataset URL hostname: {exc}") from exc
+
+        if any(ip in net for net in _PRIVATE_NETWORKS):
+            raise ValueError("Dataset URL resolves to a private or reserved address.")
+
+        path_qs = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
         suffix = Path(parsed.path).suffix or ".csv"
         dest = run_dir / f"input{suffix}"
-        req = urllib.request.Request(dataset_path, headers={"User-Agent": "AffectLog-Executor/1.0"})
-        with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310
-            dest.write_bytes(resp.read())
-        return dest
 
-    from affectlog.core.paths import resolve_safe_path
+        # Connect directly to the pre-resolved IP — no DNS re-lookup at request time
+        conn: http.client.HTTPConnection | None = None
+        try:
+            raw_sock = socket.create_connection((ip_str, port), timeout=60)
+            if parsed.scheme == "https":
+                ctx = ssl.create_default_context()
+                tls_sock = ctx.wrap_socket(raw_sock, server_hostname=host)
+                conn = http.client.HTTPSConnection(host, port=port, timeout=60)
+                conn.sock = tls_sock
+            else:
+                conn = http.client.HTTPConnection(host, port=port, timeout=60)
+                conn.sock = raw_sock
+            conn.request("GET", path_qs, headers={"User-Agent": "AffectLog-Executor/1.0"})
+            resp = conn.getresponse()
+            if resp.status != 200:
+                raise ValueError(f"Remote server returned HTTP {resp.status}.")
+            dest.write_bytes(resp.read())
+        finally:
+            if conn is not None:
+                with contextlib.suppress(Exception):
+                    conn.close()
+        return dest
 
     return resolve_safe_path(Path.cwd(), dataset_path)
 
@@ -249,7 +300,7 @@ def _run_background(wizard_run_id: str, plan: WizardPlan) -> None:
         )
 
     except Exception as exc:
-        log.exception("Wizard run %s failed: %s", wizard_run_id, exc)
+        log.exception("Wizard run %s failed: %s", _s(wizard_run_id), exc)
         _WIZARD_RUNS[wizard_run_id].update(
             {
                 "status": "failed",
@@ -328,7 +379,7 @@ def _load_run_from_disk(wizard_run_id: str) -> dict[str, Any] | None:
             "progress_pct": 100.0,
         }
     except Exception as exc:
-        log.warning("Could not reconstruct run %s from disk: %s", wizard_run_id, exc)
+        log.warning("Could not reconstruct run %s from disk: %s", _s(wizard_run_id), exc)
         return None
 
 
