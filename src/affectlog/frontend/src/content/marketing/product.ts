@@ -19,6 +19,6 @@ export const PRODUCT = {
     headline: "See the platform in action",
     primary:   { label: "Run Guided Assessment", to: "/guided-assessment" },
     secondary: { label: "Request Managed Access", to: "/request-access" },
-    tertiary:  { label: "View OpenAPI", href: "/api/docs" },
+    tertiary:  { label: "API Reference", to: "/openapi" },
   },
 } as const;

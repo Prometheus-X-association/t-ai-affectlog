@@ -108,12 +108,12 @@ const QUICKSTART_PATHS = [
 
 const DOC_CARDS = [
   { icon: BookOpen,   title: "Product Guide",         desc: "Platform overview, assessment stack, and workflow documentation.",     href: `${DOCS}/design-document.md`,      color: "#67E8F9" },
-  { icon: Code2,      title: "API Reference",          desc: "Interactive OpenAPI docs, endpoint contracts, and authentication.",     href: "/api/docs",                       color: "#93C5FD" },
+  { icon: Code2,      title: "API Reference",          desc: "OpenAPI spec, endpoint contracts, authentication, and interactive explorer.",     to: "/openapi",                          color: "#93C5FD" },
   { icon: Wrench,     title: "Self-host Guide",        desc: "Docker Compose, admin bootstrap, SMTP setup, security hardening.",     to: "/self-host",                        color: "#C4B5FD" },
-  { icon: BookMarked, title: "Assessment Recipes",     desc: "YAML pipeline specs, supported formats, and contribution guide.",      href: `${DOCS}/assessment-recipes.md`,   color: "#86EFAC" },
+  { icon: BookMarked, title: "Assessment Recipes",     desc: "YAML pipeline specs, supported formats, and contribution guide.",      href: `${DOCS}/recipes.md`,              color: "#86EFAC" },
   { icon: Shield,     title: "Security Architecture",  desc: "RBAC model, pseudonymisation, audit log, and disclosure policy.",      to: "/security",                         color: "#86EFAC" },
   { icon: Server,     title: "SaaS Architecture",      desc: "Multi-tenant model, tenant isolation, and managed operations.",        href: `${DOCS}/saas-architecture.md`,    color: "#A7F3D0" },
-  { icon: Activity,   title: "Interoperability",       desc: "CARiSMA, LOLA, PDC metadata bridges, JSON-LD output schemas.",         href: `${DOCS}/carisma-lola-interoperability.md`, color: "#FCD34D" },
+  { icon: Activity,   title: "Interoperability",       desc: "Prometheus-X PDC metadata bridges, BB04 connector specs, JSON-LD output schemas.", href: `${GITHUB}/blob/main/docs/adr/0004-openapi-and-pdc-interoperability.md`, color: "#FCD34D" },
   { icon: Cpu,        title: "Model Adapters",         desc: "Adapter interface, supported frameworks, contribution instructions.",   href: `${DOCS}/model-adapters.md`,       color: "#C4B5FD" },
 ];
 
@@ -153,15 +153,13 @@ function Hero() {
           </FadeUp>
           <FadeUp delay={0.23}>
             <div className="flex flex-wrap gap-3">
-              <a
-                href="/api/docs"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/openapi"
                 className="inline-flex items-center gap-2 font-semibold text-white rounded-xl px-6 py-3.5 transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: "linear-gradient(135deg, #93C5FD 0%, #67E8F9 60%, #A7F3D0 100%)", boxShadow: "0 6px 20px rgba(103,232,249,0.28)" }}
               >
-                Read API Docs <ExternalLink size={15} />
-              </a>
+                API Reference <ArrowRight size={15} />
+              </Link>
               <Link
                 to="/self-host"
                 className="inline-flex items-center gap-2 font-semibold text-slate-200 rounded-xl px-6 py-3.5 border transition-all hover:bg-white/[0.06]"
@@ -306,7 +304,7 @@ function FinalCTA() {
           subline="Open an issue on GitHub or browse the contributor guide. The docs are open-source and contributions are welcome."
           primary={{ label: "Open a GitHub Issue", href: `${GITHUB}/issues` }}
           secondary={{ label: "Contributor Guide",  href: `${GITHUB}/blob/main/CONTRIBUTING.md` }}
-          tertiary={{ label: "API Docs",            href: "/api/docs" }}
+          tertiary={{ label: "API Reference",       to: "/openapi" }}
         />
       </div>
     </section>

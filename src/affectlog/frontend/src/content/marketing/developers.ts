@@ -19,7 +19,7 @@ export const DEVELOPERS = {
     { label: "Dataset Recipe",    desc: "YAML-defined assessment pipeline for a new dataset format or xAPI profile.", emoji: "📋" },
     { label: "Model Adapter",     desc: "Plug in a new ML framework, model API, or ONNX artifact.", emoji: "🔌" },
     { label: "Fairness Metric",   desc: "Implement a new fairness, quality, or explainability measurement.", emoji: "📊" },
-    { label: "Connector Bridge",  desc: "Integrate with a PDC, CARiSMA, LOLA, or data-space endpoint.", emoji: "🔗" },
+    { label: "Connector Bridge",  desc: "Integrate with a PDC or Prometheus-X data-space endpoint.", emoji: "🔗" },
     { label: "Visualization",     desc: "Add a chart type or improve an existing metric display.", emoji: "📈" },
     { label: "Synthetic Fixture", desc: "Provide test datasets for CI and community onboarding.", emoji: "🧪" },
     { label: "Security Review",   desc: "Audit code paths, dependency chains, or policy enforcement logic.", emoji: "🛡️" },

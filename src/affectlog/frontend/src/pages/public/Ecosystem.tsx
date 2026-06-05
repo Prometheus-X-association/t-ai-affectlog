@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Network, BarChart2, Activity, Share2 } from "lucide-react";
+import { ArrowRight, ExternalLink, Network, Globe, Activity } from "lucide-react";
 import { PublicHeader } from "../../components/public/PublicHeader";
 import { PublicFooter } from "../../components/public/PublicFooter";
 import { GridBackground, GlowOrb } from "../../design-system/primitives/GridBackground";
@@ -22,25 +22,26 @@ function FadeUp({ children, delay = 0, className }: { children: React.ReactNode;
 
 const TOOLS = [
   {
-    name: "CARiSMA",
-    phase: "Design-time",
+    name: "Prometheus-X BB04",
+    phase: "Data-space building block",
     color: "#93C5FD",
     icon: Network,
-    role: "AI risk & compliance analysis at design time",
-    desc: "CARiSMA annotates model artefacts with compliance markers before deployment. It performs model-level security, risk, and regulatory compliance analysis, producing structured evidence that downstream tools — including AffectLog — can reference.",
+    role: "Trustworthy AI assessment building block for European data spaces",
+    desc: "Prometheus-X BB04 defines the building block specification for trustworthy AI assessment within European data spaces. AffectLog is the reference implementation of BB04, providing operation-time assessment artefacts and compliance exports aligned to the BB04 interoperability specification.",
     links: [
-      { label: "Interoperability Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/carisma-lola-interoperability.md" },
+      { label: "BB04 Technical Docs", href: "https://prometheus-x-association.github.io/docs/t-ai/" },
+      { label: "Ecosystem Overview",  to: "/ecosystem" },
     ],
   },
   {
-    name: "LOLA",
-    phase: "Evaluation scenario",
+    name: "EDGE-Skills",
+    phase: "EU Digital Europe programme",
     color: "#C4B5FD",
-    icon: BarChart2,
-    role: "Scenario-based algorithm evaluation",
-    desc: "LOLA provides scenario-based evaluation using educational datasets. It bridges the gap between design-time compliance constraints and operation-time behavioral evidence, linking evaluation scenarios to assessment workflows.",
+    icon: Globe,
+    role: "EU grant programme funding AffectLog development",
+    desc: "AffectLog is developed under the EDGE-Skills project (grant agreement 101123471) from the Digital Europe Programme. The project targets trustworthy AI assessment for education and skills data spaces, supporting compliance with EU AI Act and GDPR requirements.",
     links: [
-      { label: "Interoperability Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/carisma-lola-interoperability.md" },
+      { label: "EDGE-Skills Project", href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details" },
     ],
   },
   {
@@ -89,9 +90,9 @@ function Hero() {
           </FadeUp>
           <FadeUp delay={0.17}>
             <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-              AffectLog complements design-time risk analysis and algorithm evaluation workflows
-              with operation-time dataset and model assessment. CARiSMA, LOLA, and AffectLog form
-              a complementary three-layer evidence pipeline.
+              AffectLog is the reference implementation of the Prometheus-X BB04 Trustworthy AI
+              Assessment building block, developed under the EU EDGE-Skills programme (grant 101123471).
+              It delivers operation-time dataset and model assessment within European data spaces.
             </p>
           </FadeUp>
           <FadeUp delay={0.23}>
@@ -126,10 +127,10 @@ function LifecycleSection() {
         <FadeUp>
           <div className="text-center mb-12 max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-              Complementary across the AI lifecycle
+              Built within the Prometheus-X ecosystem
             </h2>
             <p className="text-lg text-slate-400">
-              Each tool addresses a distinct phase of trustworthy AI assessment.
+              Each component addresses a distinct layer of trustworthy AI assessment and data governance.
             </p>
           </div>
         </FadeUp>
@@ -222,8 +223,8 @@ function PDCInteroperability() {
           </h2>
           <p className="text-slate-400 mb-8 leading-relaxed">
             AffectLog produces structured JSON-LD outputs designed for interoperability with
-            Personal Data Cloud (PDC) consent flows, CARiSMA compliance markers, and LOLA
-            evaluation scenario metadata. All output schemas are documented and versioned.
+            Personal Data Cloud (PDC) consent flows, Prometheus-X data space protocols, and
+            EU AI Act compliance frameworks. All output schemas are documented and versioned.
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-left">
             {[
@@ -254,10 +255,10 @@ function FinalCTA() {
       <div className="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
         <CTABand
           headline="Explore AffectLog's role in the ecosystem"
-          subline="View the technical interoperability guide or read the Prometheus-X BB04 specification."
-          primary={{ label: "Explore Product",          to: "/product" }}
-          secondary={{ label: "View Integration Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/carisma-lola-interoperability.md" }}
-          tertiary={{ label: "BB04 Technical Docs",     href: "https://prometheus-x-association.github.io/docs/t-ai/" }}
+          subline="Review the Prometheus-X BB04 specification or explore the EDGE-Skills project."
+          primary={{ label: "Explore Product",       to: "/product" }}
+          secondary={{ label: "BB04 Technical Docs", href: "https://prometheus-x-association.github.io/docs/t-ai/" }}
+          tertiary={{ label: "EDGE-Skills Project",  href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details" }}
         />
       </div>
     </section>

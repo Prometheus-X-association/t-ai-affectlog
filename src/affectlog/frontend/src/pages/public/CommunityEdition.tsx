@@ -225,7 +225,7 @@ function ContributionSection() {
     { icon: Package,    label: "Dataset Recipes",      desc: "YAML-defined pipeline configurations for new data formats.", href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
     { icon: Cpu,        label: "Model Adapters",       desc: "Integrate new ML frameworks or model serving endpoints.",     href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
     { icon: Code2,      label: "Metrics & Plots",      desc: "Add fairness, quality, or explainability measurements.",      href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
-    { icon: GitBranch,  label: "Connector Bridges",    desc: "PDC, CARiSMA, LOLA, and data-space interoperability.",        href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
+    { icon: GitBranch,  label: "Connector Bridges",    desc: "PDC and Prometheus-X data-space interoperability connectors.", href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
   ];
 
   return (

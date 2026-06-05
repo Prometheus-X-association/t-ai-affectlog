@@ -124,20 +124,20 @@ export default function Models() {
         <div className="card">
           <pre className="text-xs text-slate-400 font-mono leading-relaxed overflow-auto">
 {`# Register a sklearn model
-curl -X POST http://localhost:8000/v1/models/register \\
+curl -X POST https://tai.affectlog.com/v1/models/register \\
   -H "Content-Type: application/json" \\
   -d '{"adapter": "sklearn", "path": "models/rf.pkl", "name": "random_forest_v1"}'
 
 # Get predictions
-curl -X POST http://localhost:8000/v1/models/{model_id}/predict \\
+curl -X POST https://tai.affectlog.com/v1/models/{model_id}/predict \\
   -H "Content-Type: application/json" \\
   -d '{"features": [[1.0, 2.0, 3.0, 4.0]]}'
 
 # Get feature importance
-curl http://localhost:8000/v1/explanations/{model_id}/feature-importance
+curl https://tai.affectlog.com/v1/explanations/{model_id}/feature-importance
 
 # Get SHAP values (requires affectlog[shap])
-curl http://localhost:8000/v1/explanations/{model_id}/shap \\
+curl https://tai.affectlog.com/v1/explanations/{model_id}/shap \\
   -d '{"features": [[1.0, 2.0, 3.0, 4.0]]}'`}
           </pre>
         </div>

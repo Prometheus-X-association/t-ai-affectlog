@@ -1,6 +1,8 @@
 /** Base API client — wraps fetch with JSON defaults and credentials. */
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+// Empty string = same origin (nginx proxies /v1/* to FastAPI in production).
+// Set VITE_API_BASE_URL to override (e.g. http://localhost:8000 for local dev without nginx).
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {

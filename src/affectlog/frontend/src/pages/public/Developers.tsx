@@ -103,7 +103,7 @@ function Hero() {
                 { text: "# Seed demo scenarios", color: "#475569" },
                 { text: "make seed", color: "#86EFAC" },
                 { text: "# Open API docs", color: "#475569" },
-                { text: "# http://localhost:8000/api/docs", color: "#64748b" },
+                { text: "# https://tai.affectlog.com/api/docs", color: "#64748b" },
               ]}
             />
           </FadeUp>
@@ -117,7 +117,7 @@ const CONTRIBUTION_TYPES = [
   { icon: Package,     label: "Dataset Recipes",     desc: "YAML-defined assessment pipeline specs for new dataset formats or domains.",     color: "#67E8F9" },
   { icon: Cpu,         label: "Model Adapters",      desc: "Plug in new ML frameworks, model APIs, or local model serving endpoints.",        color: "#C4B5FD" },
   { icon: BarChart2,   label: "Metrics & Analysis",  desc: "Fairness, quality, concentration, or explainability measurement implementations.", color: "#93C5FD" },
-  { icon: Share2,      label: "Connector Bridges",   desc: "PDC consent flows, CARiSMA/LOLA metadata bridges, external model registries.",   color: "#86EFAC" },
+  { icon: Share2,      label: "Connector Bridges",   desc: "PDC consent flows, Prometheus-X BB04 metadata, external model registries.",      color: "#86EFAC" },
   { icon: Eye,         label: "Visualizations",      desc: "Chart types, interactive displays, or improved metric visualizations.",           color: "#67E8F9" },
   { icon: FileText,    label: "Synthetic Fixtures",  desc: "Test datasets, schema examples, and scenario seeds for CI and onboarding.",       color: "#FCD34D" },
   { icon: ShieldCheck, label: "Security Review",     desc: "Code path audits, dependency scanning, or policy enforcement verification.",      color: "#FCA5A5" },

@@ -25,7 +25,7 @@ const API_CATEGORIES = [
   { icon: Database,  label: "Dataset APIs",          desc: "Upload, validate, run profile, compute metrics, get field inventory.",           color: "#93C5FD" },
   { icon: Cpu,       label: "Model APIs",            desc: "Register adapter, run explanation, generate model card, compare models.",        color: "#C4B5FD" },
   { icon: FileText,  label: "Compliance APIs",       desc: "Generate SOPs, data cards, JSON-LD graphs, audit manifests, and reports.",      color: "#86EFAC" },
-  { icon: Share2,    label: "Interoperability APIs", desc: "Export metadata for CARiSMA, LOLA, and PDC connector integrations.",            color: "#A7F3D0" },
+  { icon: Share2,    label: "Interoperability APIs", desc: "Export metadata for Prometheus-X PDC connector and BB04 interoperability.",       color: "#A7F3D0" },
   { icon: Lock,      label: "Admin APIs",            desc: "User management, RBAC, pending registrations, system health, audit log.",       color: "#FCD34D" },
 ];
 
@@ -68,17 +68,13 @@ function Hero() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href="/api/docs"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-white rounded-xl px-6 py-3.5 transition-all duration-200 hover:-translate-y-0.5"
                   style={{ background: "linear-gradient(135deg, #93C5FD 0%, #67E8F9 60%, #A7F3D0 100%)", boxShadow: "0 6px 20px rgba(103,232,249,0.28)" }}
                 >
-                  View OpenAPI Spec <ExternalLink size={15} />
+                  Interactive API Docs <ExternalLink size={15} />
                 </a>
                 <a
                   href="/api/openapi.json"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-semibold text-slate-200 rounded-xl px-6 py-3.5 border transition-all hover:bg-white/[0.06]"
                   style={{ borderColor: "rgba(203,213,225,0.22)", background: "rgba(255,255,255,0.04)" }}
                 >
@@ -94,7 +90,7 @@ function Hero() {
               label="Quick API call"
               lines={[
                 { text: "# Run dataset validation", color: "#475569" },
-                { text: "curl -X POST http://localhost:8000/v1/datasets/validate \\", color: "#67E8F9" },
+                { text: "curl -X POST https://tai.affectlog.com/v1/datasets/validate \\", color: "#67E8F9" },
                 { text: '  -H "Authorization: Bearer $TOKEN" \\', color: "#94a3b8" },
                 { text: '  -F "file=@dataset.csv" \\', color: "#86EFAC" },
                 { text: '  -F "recipe=generic_csv"', color: "#86EFAC" },
@@ -179,19 +175,19 @@ function AuthSection() {
 
             <div>
               <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">Try locally</h2>
-              <p className="text-slate-400 mb-4">After running Docker Compose, the interactive docs are available at:</p>
+              <p className="text-slate-400 mb-4">The interactive API docs are available at:</p>
               <div
                 className="rounded-xl p-4 border font-mono text-sm"
                 style={{ background: "rgba(0,0,0,0.5)", borderColor: "rgba(255,255,255,0.08)" }}
               >
-                <p className="text-[#67E8F9]">http://localhost:8000/api/docs</p>
+                <p className="text-[#67E8F9]">https://tai.affectlog.com/api/docs</p>
                 <p className="text-slate-500 text-xs mt-2">Swagger UI with live try-it panel</p>
               </div>
               <div
                 className="rounded-xl p-4 border font-mono text-sm mt-3"
                 style={{ background: "rgba(0,0,0,0.5)", borderColor: "rgba(255,255,255,0.08)" }}
               >
-                <p className="text-[#67E8F9]">http://localhost:8000/api/openapi.json</p>
+                <p className="text-[#67E8F9]">https://tai.affectlog.com/api/openapi.json</p>
                 <p className="text-slate-500 text-xs mt-2">OpenAPI 3.1 JSON schema</p>
               </div>
             </div>
@@ -209,9 +205,9 @@ function FinalCTA() {
         <CTABand
           headline="Automate your assessment workflows"
           subline="All platform capabilities are available via documented, versioned OpenAPI endpoints."
-          primary={{ label: "View OpenAPI Spec",     href: "/api/docs" }}
-          secondary={{ label: "Read Integration Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/design-document.md" }}
-          tertiary={{ label: "Try Locally",          to: "/self-host" }}
+          primary={{ label: "Interactive API Docs",  href: "/api/docs" }}
+          secondary={{ label: "API Reference Guide",  href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/api.md" }}
+          tertiary={{ label: "Self-host Guide",       to: "/self-host" }}
         />
       </div>
     </section>

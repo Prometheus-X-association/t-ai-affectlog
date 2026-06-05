@@ -32,18 +32,17 @@ const FOOTER_COLS = [
     links: [
       { label: "GitHub",            href: GITHUB },
       { label: "Contributor Guide", href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
-      { label: "API Docs",          href: "/api/docs" },
+      { label: "API Reference",     to: "/openapi" },
       { label: "Assessment Recipes",to: "/developers" },
-      { label: "Model Adapters",    href: `${DOCS}/model-adapters.md` },
+      { label: "Model Adapters",    href: `${GITHUB}/blob/main/CONTRIBUTING.md` },
     ],
   },
   {
     title: "Ecosystem",
     links: [
-      { label: "Prometheus-X BB04",   to: "/ecosystem" },
-      { label: "CARiSMA",             href: `${DOCS}/carisma-lola-interoperability.md` },
-      { label: "LOLA",                href: `${DOCS}/carisma-lola-interoperability.md` },
-      { label: "EDGE-Skills",         href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details" },
+      { label: "Prometheus-X BB04",    to: "/ecosystem" },
+      { label: "EDGE-Skills",          href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details" },
+      { label: "BB04 Technical Docs",  href: "https://prometheus-x-association.github.io/docs/t-ai/" },
     ],
   },
   {
@@ -223,12 +222,12 @@ export function PublicFooter() {
               >
                 <Github size={14} /> GitHub
               </a>
-              <a
-                href="/api/docs"
+              <Link
+                to="/openapi"
                 className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-300 transition-colors"
               >
-                API Docs
-              </a>
+                API Reference
+              </Link>
             </div>
           </div>
 
@@ -250,15 +249,13 @@ export function PublicFooter() {
               </a>
               <span className="text-slate-700" aria-hidden="true">·</span>
               <a
-                href="https://prometheus-x.org/bb04-trustworthy-ai-assessment/"
+                href="https://prometheus-x-association.github.io/docs/t-ai/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-slate-600 hover:text-slate-400 transition-colors flex items-center gap-1"
               >
                 Prometheus-X BB04 <ExternalLink size={9} />
               </a>
-              <span className="text-slate-700" aria-hidden="true">·</span>
-              <span className="text-xs text-slate-600">Prometheus-X BB04</span>
             </div>
           </div>
         </div>

@@ -169,26 +169,26 @@ export const useCases: UseCase[] = [
 ];
 
 export const ecosystem = {
-  heading: "Part of the Trustworthy AI Assessment Ecosystem",
+  heading: "Part of the Prometheus-X Trustworthy AI Ecosystem",
   intro:
-    "AffectLog is one component in the Prometheus-X Trustworthy AI Assessment building block (BB04). It is designed to be complementary to — not a replacement for — CARiSMA and LOLA.",
+    "AffectLog is the reference implementation of the Prometheus-X BB04 Trustworthy AI Assessment building block, developed under the EU EDGE-Skills programme (grant 101123471).",
   docsUrl: "https://prometheus-x-association.github.io/docs/t-ai/",
   tools: [
     {
-      name: "CARiSMA",
-      affiliation: "University of Koblenz",
-      role: "Design-time risk and security analysis",
+      name: "Prometheus-X BB04",
+      affiliation: "Prometheus-X Association",
+      role: "Trustworthy AI assessment building block specification",
       description:
-        "CARiSMA supports model-based risk, compliance, and security analysis at design time. AffectLog is integration-ready with CARiSMA, exporting operation-time audit metadata that can be ingested by CARiSMA workflows.",
-      relation: "complementary to",
+        "Prometheus-X BB04 defines the interoperability specification for trustworthy AI assessment within European data spaces. AffectLog is its reference implementation, delivering operation-time dataset and model assessment aligned to BB04 outputs.",
+      relation: "implements",
     },
     {
-      name: "LOLA",
-      affiliation: "LORIA / Université de Lorraine",
-      role: "Algorithm evaluation scenarios",
+      name: "EDGE-Skills",
+      affiliation: "EU Digital Europe Programme",
+      role: "EU grant funding AffectLog development",
       description:
-        "LOLA supports algorithm evaluation scenarios using real-world data under secure execution conditions. AffectLog shares a common metrics vocabulary with LOLA — coverage, Gini, nDCG, diversity, novelty — enabling metadata interoperability.",
-      relation: "metadata interoperability with",
+        "The EDGE-Skills project (grant agreement 101123471) from the Digital Europe Programme funds AffectLog's development. It targets trustworthy AI for education and skills data spaces, supporting EU AI Act and GDPR compliance requirements.",
+      relation: "funded by",
     },
     {
       name: "AffectLog",
@@ -234,7 +234,7 @@ export const finalCta = {
   buttons: [
     { label: "Launch Console", href: "/login", external: false },
     { label: "Run with Docker", href: "/docs/deployment", external: false },
-    { label: "View API Docs", href: "/api/docs", external: false },
+    { label: "API Reference", href: "/openapi", external: false },
     {
       label: "Contribute",
       href: "https://github.com/roy-saurabh/edge_affectlog",

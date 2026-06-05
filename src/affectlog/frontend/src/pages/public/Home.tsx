@@ -346,7 +346,7 @@ const CAPS = [
   { icon: Cpu,          title: "Model Explainability",    desc: "Feature importance, prediction explanations, model card generation, comparison.",       color: "#D8B4FE" },
   { icon: Lock,         title: "Privacy-by-default",      desc: "No raw dataset stored. Metadata-only outputs. Pseudonymised field inventory.",         color: "#86EFAC" },
   { icon: FileText,     title: "Audit Artifacts",         desc: "SOP report, Data Card, JSON-LD compliance graph, dashboard export payload.",           color: "#67E8F9" },
-  { icon: Share2,       title: "Connector-ready",         desc: "OpenAPI service. PDC, CARiSMA, LOLA interoperability. Data-space protocol ready.",     color: "#93C5FD" },
+  { icon: Share2,       title: "Connector-ready",         desc: "OpenAPI-first service. PDC and Prometheus-X data-space protocol interoperability.",     color: "#93C5FD" },
   { icon: Layers,       title: "Assessment Recipes",      desc: "YAML-defined reusable pipeline specs. Inokufu, Maskott, generic templates.",           color: "#C4B5FD" },
   { icon: Network,      title: "Concentration Analysis",  desc: "Long-tail activity patterns. Temporal concentration. Dominance curves.",               color: "#5EEAD4" },
   { icon: ClipboardList,title: "Compliance Metadata",     desc: "AI Act Annex IV fields, GDPR Article 30, JSON-LD structured evidence graph.",         color: "#A7F3D0" },
@@ -664,20 +664,20 @@ function EditionSplit() {
 // ── ECOSYSTEM ──────────────────────────────────────────────────────────────
 const ECOSYSTEM_TOOLS = [
   {
-    name: "CARiSMA",
-    affil: "EDGE-Skills Ecosystem",
-    role: "Design-time AI risk & compliance",
-    phase: "Design-time",
+    name: "Prometheus-X BB04",
+    affil: "Data-space building block",
+    role: "Trustworthy AI assessment specification",
+    phase: "Data-space layer",
     color: "#93C5FD",
-    desc: "Model-level security, risk, and compliance analysis at design time. Annotates model artefacts with compliance markers before deployment.",
+    desc: "Prometheus-X BB04 defines the interoperability specification for trustworthy AI assessment within European data spaces. AffectLog is the reference implementation.",
   },
   {
-    name: "LOLA",
-    affil: "EDGE-Skills Ecosystem",
-    role: "Scenario-based evaluation",
-    phase: "Evaluation scenario",
+    name: "EDGE-Skills",
+    affil: "EU Digital Europe programme",
+    role: "EU grant funding AffectLog (grant 101123471)",
+    phase: "EU programme",
     color: "#C4B5FD",
-    desc: "Algorithm evaluation using educational scenario datasets. Bridges the gap between design constraints and operational evidence.",
+    desc: "The EDGE-Skills project funds AffectLog's development under the Digital Europe Programme, targeting trustworthy AI for education and skills data spaces.",
   },
   {
     name: "AffectLog",
@@ -706,7 +706,7 @@ function EcosystemSection() {
               Prometheus-X Trustworthy AI Ecosystem
             </h2>
             <p className="text-lg text-slate-400 leading-relaxed">
-              AffectLog operates at the operation-time layer, complementing CARiSMA and LOLA across the AI system lifecycle.
+              AffectLog is the reference implementation of Prometheus-X BB04, developed under the EU EDGE-Skills programme.
             </p>
           </div>
         </FadeUp>
@@ -792,7 +792,7 @@ const DEV_CONTRIB = [
   { icon: Package,      label: "Add a dataset recipe",   desc: "YAML-defined assessment pipeline for a new dataset format." },
   { icon: Cpu,          label: "Add a model adapter",    desc: "Plug in a new ML framework or model API." },
   { icon: BarChart2,    label: "Contribute a metric",    desc: "Implement a fairness, quality, or explainability metric." },
-  { icon: Share2,       label: "Add a connector bridge", desc: "Integrate with a PDC, CARiSMA, or LOLA endpoint." },
+  { icon: Share2,       label: "Add a connector bridge", desc: "Integrate with a PDC or Prometheus-X data-space endpoint." },
   { icon: Eye,          label: "Improve visualizations", desc: "Add chart types or improve existing metric displays." },
   { icon: FileText,     label: "Add synthetic fixtures", desc: "Provide test datasets for CI and community onboarding." },
   { icon: ShieldCheck,  label: "Review security",        desc: "Audit code paths, dependencies, or policy enforcement." },

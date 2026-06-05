@@ -75,14 +75,12 @@ function Hero() {
               >
                 View Export Catalog <ArrowRight size={17} />
               </Link>
-              <a
-                href="/api/docs"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/openapi"
                 className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white px-5 py-3.5 text-sm transition-colors"
               >
-                Generate Sample JSON-LD <ExternalLink size={12} />
-              </a>
+                API Reference <ArrowRight size={12} />
+              </Link>
             </div>
           </FadeUp>
         </div>
@@ -154,15 +152,13 @@ function JSONLDSection() {
               ))}
             </div>
             <div className="flex flex-wrap gap-3">
-              <a
-                href="/api/docs"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/openapi"
                 className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white px-5 py-2.5 border rounded-xl transition-all hover:bg-white/[0.04]"
                 style={{ borderColor: "rgba(203,213,225,0.18)" }}
               >
-                Generate Sample JSON-LD <ExternalLink size={12} />
-              </a>
+                API Reference <ArrowRight size={12} />
+              </Link>
             </div>
           </FadeUp>
 
@@ -215,7 +211,7 @@ function FinalCTA() {
           headline="Generate audit-ready evidence"
           subline="Run an assessment and download structured SOPs, data cards, and JSON-LD compliance graphs."
           primary={{ label: "View Export Catalog",    to: "/login" }}
-          secondary={{ label: "Read Compliance Docs", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/design-document.md" }}
+          secondary={{ label: "Compliance Mapping",  href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/docs/compliance-mapping.md" }}
           tertiary={{ label: "Request Access",        to: "/request-access" }}
         />
       </div>

@@ -5,16 +5,16 @@ const CENTER = { x: 210, y: 140, label: "AffectLog", color: "#67E8F9" };
 
 const PEERS = [
   { id: "pdc",      label: "PDC",              sub: "Consent & Policy",     x: 60,  y: 40,  color: "#C4B5FD" },
-  { id: "carisma",  label: "CARiSMA",          sub: "Risk & Compliance",    x: 360, y: 40,  color: "#93C5FD" },
-  { id: "lola",     label: "LOLA",             sub: "Scenario Evaluation",  x: 360, y: 230, color: "#86EFAC" },
+  { id: "ptx",      label: "Prometheus-X",     sub: "BB04 Building Block",  x: 360, y: 40,  color: "#93C5FD" },
+  { id: "edge",     label: "EDGE-Skills",      sub: "EU Programme",         x: 360, y: 230, color: "#86EFAC" },
   { id: "registry", label: "Model Registry",   sub: "External adapters",    x: 60,  y: 230, color: "#FCD34D" },
   { id: "export",   label: "Dashboard Export", sub: "JSON-LD / Artifact",   x: 210, y: 270, color: "#94a3b8" },
 ];
 
 const EDGE_LABELS = [
   { from: "pdc",      label: "consent query" },
-  { from: "carisma",  label: "metadata bridge" },
-  { from: "lola",     label: "assessment feed" },
+  { from: "ptx",      label: "BB04 metadata" },
+  { from: "edge",     label: "compliance feed" },
   { from: "registry", label: "adapter pull" },
   { from: "export",   label: "artifact push" },
 ];

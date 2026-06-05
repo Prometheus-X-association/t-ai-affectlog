@@ -39,11 +39,9 @@ const NAV_MENUS = [
     label: "Ecosystem",
     key:   "ecosystem",
     items: [
-      { label: "Prometheus-X",     to: "/ecosystem",    icon: Network,    desc: "BB04 Trustworthy AI building block" },
-      { label: "CARiSMA",          to: "/ecosystem",    icon: ShieldCheck,desc: "Design-time risk analysis partner" },
-      { label: "LOLA",             to: "/ecosystem",    icon: BarChart3,  desc: "Scenario-based evaluation partner" },
-      { label: "EDGE-Skills",      href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details",
-                                   icon: Globe,         desc: "EU Digital Europe project" },
+      { label: "Prometheus-X BB04", to: "/ecosystem",    icon: Network,    desc: "Trustworthy AI assessment building block" },
+      { label: "EDGE-Skills",       href: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/883807838/project/101123471/program/43152860/details",
+                                    icon: Globe,         desc: "EU Digital Europe programme (grant 101123471)" },
     ],
   },
   {
@@ -53,9 +51,10 @@ const NAV_MENUS = [
       { label: "GitHub",            href: "https://github.com/roy-saurabh/edge_affectlog",          icon: Github,      desc: "Source code and issues" },
       { label: "Contributor Guide", href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md",
                                                                                                     icon: GitBranch,   desc: "How to add recipes and adapters" },
-      { label: "API Docs",          href: "/api/docs",                                              icon: BookOpen,    desc: "Interactive OpenAPI reference" },
+      { label: "API Reference",     to: "/openapi",                                                 icon: BookOpen,    desc: "OpenAPI spec, endpoint contracts" },
       { label: "Recipes",           to: "/developers",                                              icon: Package,     desc: "Reusable assessment pipeline specs" },
-      { label: "Model Adapters",    to: "/developers",                                              icon: Wrench,      desc: "Plug in your ML framework" },
+      { label: "Model Adapters",    href: "https://github.com/roy-saurabh/edge_affectlog/blob/main/CONTRIBUTING.md",
+                                                                                                    icon: Wrench,      desc: "Adapter interface for ML frameworks" },
     ],
   },
   {
@@ -64,7 +63,7 @@ const NAV_MENUS = [
     items: [
       { label: "Documentation",    to: "/docs",          icon: BookMarked,   desc: "Guides, APIs, architecture" },
       { label: "Self-host",        to: "/self-host",     icon: Server,       desc: "Docker Compose deployment" },
-      { label: "Use Cases",        to: "/ecosystem",     icon: ClipboardList,desc: "CARiSMA, LOLA, EDGE-Skills" },
+      { label: "Ecosystem",        to: "/ecosystem",     icon: ClipboardList,desc: "Prometheus-X, EDGE-Skills, data spaces" },
       { label: "Security Policy",  to: "/security",      icon: Lock,         desc: "Disclosure and access controls" },
     ],
   },

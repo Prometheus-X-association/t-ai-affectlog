@@ -2,20 +2,20 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const NODES = [
-  { id: "affectlog", label: "AffectLog",    role: "Assessment",          x: 200, y: 140, color: "#67E8F9",  r: 22, highlight: true },
-  { id: "pdc",       label: "PDC",          role: "Policy & Consent",    x: 340, y: 60,  color: "#C4B5FD",  r: 16 },
-  { id: "carisma",   label: "CARiSMA",      role: "Design-time Risk",    x: 80,  y: 60,  color: "#93C5FD",  r: 16 },
-  { id: "lola",      label: "LOLA",         role: "Scenario Evaluation", x: 60,  y: 220, color: "#86EFAC",  r: 16 },
-  { id: "provider",  label: "Data Provider",role: "Dataset Source",      x: 340, y: 220, color: "#94a3b8",  r: 14 },
-  { id: "auditor",   label: "Auditor",      role: "Evidence Consumer",   x: 200, y: 280, color: "#FCD34D",  r: 14 },
+  { id: "affectlog", label: "AffectLog",      role: "Assessment",         x: 200, y: 140, color: "#67E8F9",  r: 22, highlight: true },
+  { id: "pdc",       label: "PDC",            role: "Policy & Consent",   x: 340, y: 60,  color: "#C4B5FD",  r: 16 },
+  { id: "ptx",       label: "Prometheus-X",   role: "BB04 Building Block",x: 80,  y: 60,  color: "#93C5FD",  r: 16 },
+  { id: "edge",      label: "EDGE-Skills",    role: "EU Programme",       x: 60,  y: 220, color: "#86EFAC",  r: 16 },
+  { id: "provider",  label: "Data Provider",  role: "Dataset Source",     x: 340, y: 220, color: "#94a3b8",  r: 14 },
+  { id: "auditor",   label: "Auditor",        role: "Evidence Consumer",  x: 200, y: 280, color: "#FCD34D",  r: 14 },
 ];
 
 const EDGES = [
-  { from: "affectlog", to: "pdc",      label: "consent check",     color: "#C4B5FD" },
-  { from: "affectlog", to: "carisma",  label: "metadata bridge",   color: "#93C5FD" },
-  { from: "affectlog", to: "lola",     label: "eval interop",      color: "#86EFAC" },
-  { from: "affectlog", to: "provider", label: "dataset ingest",    color: "#67E8F9" },
-  { from: "affectlog", to: "auditor",  label: "artifact export",   color: "#FCD34D" },
+  { from: "affectlog", to: "pdc",      label: "consent check",    color: "#C4B5FD" },
+  { from: "affectlog", to: "ptx",      label: "BB04 metadata",    color: "#93C5FD" },
+  { from: "affectlog", to: "edge",     label: "compliance feed",  color: "#86EFAC" },
+  { from: "affectlog", to: "provider", label: "dataset ingest",   color: "#67E8F9" },
+  { from: "affectlog", to: "auditor",  label: "artifact export",  color: "#FCD34D" },
 ];
 
 function getNode(id: string) {

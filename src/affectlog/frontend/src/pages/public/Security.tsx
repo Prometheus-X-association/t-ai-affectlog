@@ -326,7 +326,7 @@ function FinalCTA() {
           subline="Request a security review, read the full security policy, or explore RBAC documentation before requesting access."
           primary={{ label: "Request Managed Access",  to: "/request-access" }}
           secondary={{ label: "Read Security Policy", href: `${GITHUB}/blob/main/SECURITY.md` }}
-          tertiary={{ label: "Review RBAC Model",     href: `${GITHUB}/blob/main/docs/rbac-model.md` }}
+          tertiary={{ label: "Privacy & Security Docs", href: `${GITHUB}/blob/main/docs/privacy-and-security.md` }}
         />
       </div>
     </section>

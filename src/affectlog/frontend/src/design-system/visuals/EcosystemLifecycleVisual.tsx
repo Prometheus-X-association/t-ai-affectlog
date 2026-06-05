@@ -1,10 +1,10 @@
 import React from "react";
 
 const STAGES = [
-  { id: "design",    label: "Design-time",      tool: "CARiSMA",   color: "#93C5FD", x: 80 },
-  { id: "eval",      label: "Evaluation",        tool: "LOLA",      color: "#C4B5FD", x: 240 },
-  { id: "operation", label: "Operation-time",    tool: "AffectLog", color: "#67E8F9", x: 400, highlight: true },
-  { id: "evidence",  label: "Audit Evidence",    tool: "Artifacts", color: "#86EFAC", x: 560 },
+  { id: "ptx",       label: "Data Spaces",       tool: "PTX BB04",    color: "#93C5FD", x: 80 },
+  { id: "edge",      label: "EU Programme",       tool: "EDGE-Skills", color: "#C4B5FD", x: 240 },
+  { id: "operation", label: "Operation-time",     tool: "AffectLog",   color: "#67E8F9", x: 400, highlight: true },
+  { id: "evidence",  label: "Audit Evidence",     tool: "Artifacts",   color: "#86EFAC", x: 560 },
 ];
 
 const ARROWS = [
@@ -22,7 +22,7 @@ export function EcosystemLifecycleVisual() {
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full"
         role="img"
-        aria-label="Ecosystem lifecycle: CARiSMA at design-time, LOLA for evaluation, AffectLog for operation-time assessment, leading to audit evidence"
+        aria-label="Ecosystem lifecycle: Prometheus-X BB04 data-space building block, EDGE-Skills EU programme, AffectLog for operation-time assessment, leading to audit evidence"
       >
         <style>{`
           @keyframes arrowFlow {
