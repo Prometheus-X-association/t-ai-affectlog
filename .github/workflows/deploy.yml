@@ -174,36 +174,48 @@ jobs:
     name: Deploy to trustworthyai.affectlog.com
     runs-on: ubuntu-latest
     needs: [docker]
+    permissions:
+      contents: read
+      packages: read
     environment:
       name: production
       url: https://trustworthyai.affectlog.com
-    # Requires these secrets in the production environment:
-    #   DEPLOY_SSH_KEY   — private key for the deploy user
-    #   DEPLOY_HOST      — hostname / IP of the production server
-    #   DEPLOY_USER      — SSH username (e.g. deploy)
-    #   DEPLOY_PATH      — path on server where docker-compose.yml lives
+    # Requires these secrets in the repository:
+    #   DEPLOY_SSH_KEY   — private key matching an authorized_key on DEPLOY_HOST
+    #   DEPLOY_HOST      — server IP or hostname (62.72.16.195)
+    #   DEPLOY_USER      — SSH username (root)
+    #   DEPLOY_PATH      — deployment directory (/opt/tai-affectlog)
     steps:
-      - uses: actions/checkout@v4
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 10m
           script: |
             set -e
             cd ${{ secrets.DEPLOY_PATH }}
 
-            # Pull latest images
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose pull
+            # Authenticate with GHCR using the workflow token (valid for this run)
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-            # Restart services with zero-downtime rollover
-            docker compose up -d --remove-orphans
+            # Pull new images (all three services in parallel)
+            docker compose pull --quiet
 
-            # Health check
-            sleep 10
-            curl -fsS https://trustworthyai.affectlog.com/healthz || (docker compose logs --tail=50 && exit 1)
+            # Rolling restart — bring up new containers, remove old ones
+            docker compose up -d --remove-orphans --pull never
+
+            # Free dangling images from previous deploy to preserve disk space
+            # (VPS has limited storage — this is critical)
+            docker image prune -f
+
+            # Wait for API to finish startup (runs DB migrations on first boot)
+            echo "Waiting for services to be healthy..."
+            sleep 30
+
+            # Health check via HTTPS
+            curl -fsS --max-time 15 https://trustworthyai.affectlog.com/healthz \
+              || (echo "=== Container logs ===" && docker compose logs --tail=60 && exit 1)
 
             echo "Deploy complete: $(date)"
