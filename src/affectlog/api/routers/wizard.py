@@ -194,8 +194,8 @@ async def download_wizard_run_artifact(wizard_run_id: str, filename: str) -> Any
         raise HTTPException(status_code=400, detail="Invalid filename.")
     try:
         validate_run_id(wizard_run_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid run ID.")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid run ID.") from exc
     settings = get_settings()
     run_dir = resolve_safe_path(Path(settings.runs_dir), wizard_run_id)
     artifact_path = resolve_safe_path(run_dir, filename)
@@ -217,8 +217,8 @@ async def get_wizard_run_artifacts(wizard_run_id: str) -> dict[str, Any]:
 
     try:
         validate_run_id(wizard_run_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid run ID.")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid run ID.") from exc
     settings = get_settings()
     run_dir = resolve_safe_path(Path(settings.runs_dir), wizard_run_id)
     if not run_dir.exists():
