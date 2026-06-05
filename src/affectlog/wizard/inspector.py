@@ -40,7 +40,6 @@ _PRIVATE_NETWORKS: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = (
 )
 
 
-
 def _is_url(s: str) -> bool:
     try:
         p = urlparse(s)
@@ -68,7 +67,7 @@ def _fetch_url_to_tempfile(url: str) -> tuple[Path, int] | tuple[None, str]:
         addrinfos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
         if not addrinfos:
             return None, "Could not resolve hostname."
-        ip_str = addrinfos[0][4][0]
+        ip_str = str(addrinfos[0][4][0])
     except OSError:
         return None, "Could not resolve hostname."
 

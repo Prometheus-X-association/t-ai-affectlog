@@ -60,7 +60,7 @@ def _resolve_dataset_path(dataset_path: str, run_dir: Path) -> Path:
         # Resolve hostname → IP once and validate before connecting (SSRF guard)
         try:
             addrinfos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
-            ip_str = addrinfos[0][4][0]
+            ip_str = str(addrinfos[0][4][0])
             ip = ipaddress.ip_address(ip_str)
         except (OSError, IndexError, ValueError) as exc:
             raise ValueError(f"Could not resolve dataset URL hostname: {exc}") from exc
