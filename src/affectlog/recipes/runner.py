@@ -216,6 +216,7 @@ def run_audit(
     # Write flat CSV of key metric values
     import csv
     import io
+
     csv_buf = io.StringIO()
     writer = csv.writer(csv_buf)
     writer.writerow(["metric", "value"])

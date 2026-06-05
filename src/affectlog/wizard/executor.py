@@ -36,9 +36,7 @@ def _resolve_dataset_path(dataset_path: str, run_dir: Path) -> Path:
 
         suffix = Path(parsed.path).suffix or ".csv"
         dest = run_dir / f"input{suffix}"
-        req = urllib.request.Request(
-            dataset_path, headers={"User-Agent": "AffectLog-Executor/1.0"}
-        )
+        req = urllib.request.Request(dataset_path, headers={"User-Agent": "AffectLog-Executor/1.0"})
         with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310
             dest.write_bytes(resp.read())
         return dest
@@ -65,7 +63,6 @@ def _run_tabular(wizard_run_id: str, plan: WizardPlan, input_path: Path, run_dir
 
     _WIZARD_RUNS[wizard_run_id]["current_stage"] = "statistics"
     try:
-        import polars as pl
         from affectlog.ingest.large_file import scan_csv_lazy
 
         lf = scan_csv_lazy(input_path)
@@ -74,12 +71,14 @@ def _run_tabular(wizard_run_id: str, plan: WizardPlan, input_path: Path, run_dir
         col_stats: list[dict[str, Any]] = []
         for col in df.columns:
             s = df[col]
-            col_stats.append({
-                "name": col,
-                "dtype": str(s.dtype),
-                "null_count": int(s.null_count()),
-                "n_unique": int(s.n_unique()),
-            })
+            col_stats.append(
+                {
+                    "name": col,
+                    "dtype": str(s.dtype),
+                    "null_count": int(s.null_count()),
+                    "n_unique": int(s.n_unique()),
+                }
+            )
         metrics: dict[str, Any] = {
             "row_count": row_count,
             "column_count": len(df.columns),
@@ -98,9 +97,7 @@ def _run_tabular(wizard_run_id: str, plan: WizardPlan, input_path: Path, run_dir
 
     _WIZARD_RUNS[wizard_run_id]["current_stage"] = "compliance_export"
     privacy_report: dict[str, Any] = {
-        "pii_fields": [
-            c["name"] for c in schema_prof.get("columns", []) if c.get("is_pii_field")
-        ],
+        "pii_fields": [c["name"] for c in schema_prof.get("columns", []) if c.get("is_pii_field")],
         "risk_summary": {"level": "low"},
     }
     privacy_path = store.write_json("privacy_report.json", privacy_report)
@@ -129,7 +126,11 @@ def _run_tabular(wizard_run_id: str, plan: WizardPlan, input_path: Path, run_dir
         fields=field_names,
         privacy_report=privacy_report,
         metrics=metrics,
-        stages=[{"name": "schema_profiling"}, {"name": "statistics"}, {"name": "compliance_export"}],
+        stages=[
+            {"name": "schema_profiling"},
+            {"name": "statistics"},
+            {"name": "compliance_export"},
+        ],
         config_hash=compute_config_hash({"format": plan.detected_format}),
     )
     jld_path = run_dir / "compliance_graph.jsonld"
@@ -144,7 +145,11 @@ def _run_tabular(wizard_run_id: str, plan: WizardPlan, input_path: Path, run_dir
         row_count=row_count,
         privacy_report=privacy_report,
         metrics=metrics,
-        stages=[{"name": "schema_profiling"}, {"name": "statistics"}, {"name": "compliance_export"}],
+        stages=[
+            {"name": "schema_profiling"},
+            {"name": "statistics"},
+            {"name": "compliance_export"},
+        ],
         artifacts={"schema_profile": str(schema_path), "metrics": str(metrics_path)},
         source_platform="Generic Tabular",
     )
@@ -343,7 +348,11 @@ _ARTIFACT_META: dict[str, tuple[str, str, str]] = {
     "metrics.json": ("All computed metrics in structured JSON.", "json", "public"),
     "metrics.csv": ("Flat CSV of key metric values.", "csv", "public"),
     "dashboard_payload.json": ("Structured payload for dashboard visualisation.", "json", "public"),
-    "audit_manifest.json": ("Signed manifest of all inputs, parameters, and artifact hashes.", "json", "public"),
+    "audit_manifest.json": (
+        "Signed manifest of all inputs, parameters, and artifact hashes.",
+        "json",
+        "public",
+    ),
     "SOP.md": ("Standard Operating Procedure document.", "markdown", "public"),
     "SOP.html": ("SOP rendered as HTML.", "html", "public"),
     "privacy_report.json": ("PII scan and privacy risk assessment.", "json", "restricted"),
@@ -352,8 +361,16 @@ _ARTIFACT_META: dict[str, tuple[str, str, str]] = {
     "transform_report.json": ("Maskott CSV → xAPI transform summary.", "json", "public"),
     "schema_profile.json": ("Full schema profile with column statistics.", "json", "public"),
     "descriptive_stats.json": ("Descriptive statistics for all fields.", "json", "public"),
-    "temporal_stats.json": ("Temporal analysis: event density and session patterns.", "json", "public"),
-    "concentration_metrics.json": ("Concentration analysis: Gini, entity and resource dominance.", "json", "public"),
+    "temporal_stats.json": (
+        "Temporal analysis: event density and session patterns.",
+        "json",
+        "public",
+    ),
+    "concentration_metrics.json": (
+        "Concentration analysis: Gini, entity and resource dominance.",
+        "json",
+        "public",
+    ),
     "coverage_metrics.json": ("Coverage@K metrics across recommendation depths.", "json", "public"),
     "fairness_metrics.json": ("Fairness analysis results.", "json", "medium"),
     "data_card.json": ("Dataset Data Card export.", "json", "public"),

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
 import csv
-import io
 import json
 import logging
 import tempfile
@@ -40,17 +40,21 @@ def _fetch_url_to_tempfile(url: str) -> tuple[Path, int] | tuple[None, str]:
         with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310
             content_length = int(resp.headers.get("Content-Length", 0))
             if content_length > _URL_SIZE_LIMIT:
-                return None, f"Remote file too large ({content_length // 1_048_576} MB). Limit is 50 MB."
+                return (
+                    None,
+                    f"Remote file too large ({content_length // 1_048_576} MB). Limit is 50 MB.",
+                )
             data = resp.read(_URL_SIZE_LIMIT + 1)
             if len(data) > _URL_SIZE_LIMIT:
                 return None, "Remote file exceeds 50 MB limit."
             suffix = Path(urlparse(url).path).suffix or ".tmp"
-            tf = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-            tf.write(data)
-            tf.flush()
-            return Path(tf.name), len(data)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tf:
+                tf.write(data)
+                tf.flush()
+                return Path(tf.name), len(data)
     except Exception as exc:
         return None, f"Could not fetch URL: {exc}"
+
 
 MASKOTT_REQUIRED = frozenset(["_id", "AccessDate", "ResourceId", "EntityId", "ResourceType"])
 MASKOTT_ALL = frozenset(
@@ -279,6 +283,7 @@ def inspect(req: InspectInputRequest) -> InspectInputResponse:
                 unsupported_reason=str(meta),
             )
         _temp_path = result
+        assert isinstance(meta, int)
         fetched_size = meta
         path = _temp_path
         # Preserve original extension so format detection works by suffix
@@ -410,9 +415,7 @@ def inspect(req: InspectInputRequest) -> InspectInputResponse:
     )
 
     if _temp_path is not None:
-        try:
+        with contextlib.suppress(Exception):
             _temp_path.unlink(missing_ok=True)
-        except Exception:
-            pass
 
     return response
