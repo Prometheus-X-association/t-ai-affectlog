@@ -84,6 +84,7 @@ typecheck:
 security:
 	bandit -r src/affectlog/ -c pyproject.toml
 	pip-audit --desc on
+	$(PYTHON) scripts/check_frontend_security.py
 
 docs:
 	mkdocs build --strict
