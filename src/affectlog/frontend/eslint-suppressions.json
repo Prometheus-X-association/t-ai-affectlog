@@ -1,0 +1,17 @@
+{
+  "src/components/visuals/ConnectorInteroperabilityMap.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/pages/Home.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/pages/public/Pricing.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  }
+}
